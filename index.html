@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Boochoo Menu</title>
+    <style>
+        /* Modern, Clean Minimalist Styles */
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f8f9fa;
+            color: #333;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+        }
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px solid #eee;
+            padding-bottom: 15px;
+            margin-bottom: 20px;
+        }
+        .lang-btn {
+            background: #333;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        /* Menu Grid */
+        .menu-item {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #f0f0f0;
+            align-items: center;
+        }
+        .menu-img {
+            width: 90px;
+            height: 90px;
+            background-color: #eee;
+            border-radius: 8px;
+            object-fit: cover;
+        }
+        .menu-details {
+            flex: 1;
+        }
+        .menu-details h3 {
+            margin: 0 0 5px 0;
+            font-size: 1.1rem;
+        }
+        .menu-details p {
+            margin: 0;
+            font-size: 0.9rem;
+            color: #666;
+        }
+        /* Controls */
+        .controls {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .btn-qty {
+            background: #e9ecef;
+            border: none;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
+        .qty-num {
+            font-weight: bold;
+            min-width: 15px;
+            text-align: center;
+        }
+        /* Footer Actions */
+        .footer-action {
+            margin-top: 30px;
+            text-align: center;
+        }
+        .btn-order {
+            background: #28a745;
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            font-size: 1.1rem;
+            border-radius: 30px;
+            cursor: pointer;
+            font-weight: bold;
+            width: 100%;
+            box-shadow: 0 4px 10px rgba(40,167,69,0.2);
+        }
+        
+        /* PRINT STYLES - Triggers automatically on print command */
+        @media print {
+            body { background: white; padding: 0; color: black; }
+            .container { box-shadow: none; padding: 0; max-width: 100%; }
+            header, .lang-btn, .controls, .footer-action, .menu-img { display: none !important; }
+            .menu-item { border-bottom: 1px dashed #ccc; padding: 10px 0; margin: 0; }
+            
+            /* Only show items that have a quantity > 0 when printing */
+            .menu-item:not(.has-qty) { display: none !important; }
+            
+            .print-header { display: block !important; text-align: center; margin-bottom: 30px; }
+            .print-qty { display: inline-block !important; font-weight: bold; margin-right: 15px; }
+        }
+        .print-header, .print-qty { display: none; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <!-- Invisible on screen, visible on printer paper -->
+    <div class="print-header">
+        <h1>Boochoo Order List / 订单明细</h1>
+        <p id="print-date"></p>
+    </div>
+
+    <header>
+        <h2 id="main-title">Boochoo Menu</h2>
+        <button class="lang-btn" onclick="toggleLanguage()" id="lang-toggle">中文</button>
+    </header>
+
+    <div id="menu-container">
+        <!-- Item 1 -->
+        <div class="menu-item" id="item-1">
+            <!-- REPLACE 'your-image1.jpg' WITH YOUR ACTUAL FILENAME LATER -->
+            <img src="your-image1.jpg" alt="Dish" class="menu-img" onerror="this.style.display='none';">
+            <div class="menu-details">
+                <span class="print-qty" id="p-qty-1"></span>
+                <h3 class="item-name" data-en="Signature Boochoo Bao" data-zh="招牌 Boochoo 包子">Signature Boochoo Bao</h3>
+                <p class="item-desc" data-en="Steamed fluffy buns filled with secret savory fillings." data-zh="松软的面皮包裹着独特的秘制馅料。">Steamed fluffy buns filled with secret savory fillings.</p>
+            </div>
+            <div class="controls">
+                <button class="btn-qty" onclick="changeQty(1, -1)">-</button>
+                <span class="qty-num" id="qty-1">0</span>
+                <button class="btn-qty" onclick="changeQty(1, 1)">+</button>
+            </div>
+        </div>
+
+        <!-- Item 2 -->
+        <div class="menu-item" id="item-2">
+            <img src="your-image2.jpg" alt="Dish" class="menu-img" onerror="this.style.display='none';">
+            <div class="menu-details">
+                <span class="print-qty" id="p-qty-2"></span>
+                <h3 class="item-name" data-en="Boochoo Special Milk Tea" data-zh="Boochoo 特调奶茶">Boochoo Special Milk Tea</h3>
+                <p class="item-desc" data-en="House-brewed black tea mixed with fresh milk and brown sugar pearls." data-zh="纯正红茶与鲜奶的完美融合，搭配手作黑糖波波。">House-brewed black tea mixed with fresh milk and brown sugar pearls.</p>
+            </div>
+            <div class="controls">
+                <button class="btn-qty" onclick="changeQty(2, -1)">-</button>
+                <span class="qty-num" id="qty-2">0</span>
+                <button class="btn-qty" onclick="changeQty(2, 1)">+</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="footer-action">
+        <button class="btn-order" onclick="printMenu()" id="order-btn">Hit Order & Print Menu</button>
+    </div>
+</div>
+
+<script>
+    let currentLang = 'en';
+    const quantities = { 1: 0, 2: 0 };
+
+    function toggleLanguage() {
+        currentLang = currentLang === 'en' ? 'zh' : 'en';
+        
+        // Update static text
+        document.getElementById('main-title').innerText = currentLang === 'en' ? 'Boochoo Menu' : 'Boochoo 菜单';
+        document.getElementById('lang-toggle').innerText = currentLang === 'en' ? '中文' : 'English';
+        document.getElementById('order-btn').innerText = currentLang === 'en' ? 'Hit Order & Print Menu' : '确认订单并打印菜单';
+
+        // Update item fields
+        document.querySelectorAll('.menu-item').forEach(item => {
+            const nameEl = item.querySelector('.item-name');
+            const descEl = item.querySelector('.item-desc');
+            nameEl.innerText = nameEl.getAttribute(`data-${currentLang}`);
+            descEl.innerText = descEl.getAttribute(`data-${currentLang}`);
+        });
+    }
+
+    function changeQty(id, change) {
+        let newQty = quantities[id] + change;
+        if (newQty < 0) newQty = 0;
+        
+        quantities[id] = newQty;
+        document.getElementById(`qty-${id}`).innerText = newQty;
+        
+        // Handle print classes and elements
+        const itemRow = document.getElementById(`item-${id}`);
+        const printQtySpan = document.getElementById(`p-qty-${id}`);
+        
+        if (newQty > 0) {
+            itemRow.classList.add('has-qty');
+            printQtySpan.innerText = `[x${newQty}]`;
+        } else {
+            itemRow.classList.remove('has-qty');
+            printQtySpan.innerText = '';
+        }
+    }
+
+    function printMenu() {
+        // Count total items picked
+        const totalItems = Object.values(quantities).reduce((a, b) => a + b, 0);
+        if (totalItems === 0) {
+            alert(currentLang === 'en' ? "Please select at least 1 item to print!" : "请至少选择一项来打印！");
+            return;
+        }
+
+        // Stamp date/time onto receipt header
+        const now = new Date();
+        document.getElementById('print-date').innerText = now.toLocaleString();
+        
+        // Trigger browser print dialog
+        window.print();
+    }
+</script>
+
+</body>
+</html>
