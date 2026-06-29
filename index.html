@@ -13,9 +13,11 @@
         }
         body {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            background-color: #fff5eb;
-            color: #4a3728;
+            background: #fff2e6 url('graphics/menu_background.jpg') no-repeat center center fixed;
+            background-size: cover;
+            color: #5c4033;
             overflow-x: hidden;
+            height: 100vh;
         }
 
         /* --- 1. WELCOME GREETING SCREEN --- */
@@ -25,201 +27,248 @@
             left: 0;
             width: 100vw;
             height: 100vh;
-            /* CHANGED TO YOUR UPDATED FILENAME BELOW */
-            background: #fff5eb url('start_screen.jpg') no-repeat center center;
+            background: #fff5eb url('graphics/start_screen.jpg') no-repeat center center;
             background-size: cover;
             display: flex;
             justify-content: center;
             align-items: center;
             z-index: 9999;
-            transition: opacity 0.6s ease, transform 0.6s ease;
+            transition: opacity 0.5s ease, transform 0.5s ease;
         }
 
-        /* Overlaying the actual button cleanly over the image button graphics */
-        .enter-btn-overlay {
-            position: absolute;
-            top: 60%; 
-            background: #8bc34a;
-            color: white;
-            border: 4px solid #fff;
-            padding: 12px 40px;
-            font-size: 1.8rem;
-            font-weight: bold;
-            border-radius: 20px;
+        .portal-wrapper {
+            position: relative;
+            width: 340px;
+            height: 200px;
+            margin-top: 100px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .enter-btn-image {
+            background: url('graphics/enter_button.jpg') no-repeat center center;
+            background-size: contain;
+            border: none;
             cursor: pointer;
-            box-shadow: 0 8px 0 #689f38, 0 15px 20px rgba(0,0,0,0.2);
-            text-align: center;
-            line-height: 1.2;
-            text-shadow: 2px 2px 0px rgba(0,0,0,0.2);
-            font-family: 'Arial Black', Impact, sans-serif;
-            letter-spacing: 1px;
-            transition: all 0.1s ease;
-            animation: bounce 2s infinite;
+            width: 750px;
+            height: 375px;
+            margin-top: 20px;
+            transition: transform 0.1s ease;
+            animation: cuteBounce 2.5s infinite ease-in-out;
+            outline: none;
         }
 
-        .enter-btn-overlay span {
+        .enter-btn-image:hover { transform: scale(1.06); }
+        .enter-btn-image:active { transform: scale(0.95); }
+
+        @keyframes cuteBounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-8px); }
+        }
+
+        .sparkle {
+            position: absolute;
+            background: white;
+            width: 15px; height: 15px;
+            border-radius: 50%;
+            clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
+            z-index: 3;
+            animation: twinkle 2s infinite ease-in-out;
+        }
+        .sparkle-1 { top: -10px; left: 20px; background: #e0f7fa; width: 22px; height: 22px; animation-delay: 0s; }
+        .sparkle-2 { top: 15px; right: -15px; background: #fce4ec; width: 18px; height: 18px; animation-delay: 0.5s; }
+        .sparkle-3 { bottom: 10px; left: -10px; background: #fff9c4; width: 15px; height: 15px; animation-delay: 1s; }
+
+
+
+        @keyframes floatingButton { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+        @keyframes twinkle { 0%, 100% { transform: scale(0.3); opacity: 0.2; } 50% { transform: scale(1.1); opacity: 1; } }
+        @keyframes arrowPointer { 0%, 100% { transform: translate(0, 0) rotate(-15deg); } 50% { transform: translate(-10px, -10px) rotate(-12deg); } }
+
+        .hidden-screen { opacity: 0; pointer-events: none; transform: scale(1.02); }
+
+        /* --- 2. MAIN MENU LAYOUT WITH SIDEBAR --- */
+        .app-layout {
+            display: flex;
+            max-width: 900px;
+            height: calc(100vh - 40px);
+            margin: 20px auto;
+            gap: 20px;
+            padding: 0 15px;
+        }
+
+        /* Left Side Bar Container */
+        .sidebar {
+            width: 220px;
+            background: rgba(255, 253, 250, 0.95);
+            border: 5px solid #ffcc99;
+            border-radius: 28px;
+            padding: 20px 12px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            box-shadow: 0 12px 0 #e6b88a, 0 15px 20px rgba(92,64,51,0.15);
+        }
+
+        .sidebar-title {
+            text-align: center;
+            font-family: 'Arial Black', sans-serif;
+            color: #ff751a;
+            font-size: 1.4rem;
+            text-shadow: 1px 1px 0px white;
+            padding-bottom: 10px;
+            border-bottom: 3px dashed #ffd9b3;
+        }
+
+        /* Tab Buttons */
+        .tab-btn {
+            background: #ffffff;
+            border: 3px solid #ffe6cc;
+            color: #8c6653;
+            padding: 14px 10px;
+            font-size: 1.1rem;
+            font-weight: 900;
+            border-radius: 18px;
+            cursor: pointer;
+            box-shadow: 0 4px 0 #f5dec6;
+            transition: all 0.1s ease;
+            text-align: center;
+        }
+        .tab-btn span {
             display: block;
-            font-size: 0.9rem;
+            font-size: 0.8rem;
             font-weight: normal;
             margin-top: 2px;
-            font-family: sans-serif;
+        }
+        .tab-btn:hover { background: #fffdfa; color: #ff751a; border-color: #ffcc99; }
+        
+        /* Active Tab Status */
+        .tab-btn.active-tab {
+            background: #ff944d;
+            color: white;
+            border-color: white;
+            box-shadow: 0 4px 0 #cc5200;
+            transform: translateY(0);
         }
 
-        .enter-btn-overlay:hover {
-            transform: scale(1.05);
-            background: #9ccc65;
-        }
-
-        .enter-btn-overlay:active {
-            transform: translateY(6px) scale(0.98);
-            box-shadow: 0 2px 0 #689f38, 0 5px 10px rgba(0,0,0,0.2);
-        }
-
-        @keyframes bounce {
-            0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
-            40% { transform: translateY(-10px); }
-            60% { transform: translateY(-5px); }
-        }
-
-        .hidden-screen {
-            opacity: 0;
-            pointer-events: none;
-            transform: scale(1.05);
-        }
-
-        /* --- 2. ORDERING MENU INTERFACE --- */
-        .menu-container {
-            max-width: 650px;
-            margin: 30px auto;
-            background: white;
+        /* Right Side Content Container */
+        .menu-main-content {
+            flex: 1;
+            background: rgba(255, 253, 250, 0.95);
+            border: 5px solid #ffcc99;
+            border-radius: 28px;
             padding: 25px;
-            border-radius: 24px;
-            border: 6px solid #ffd1a4;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 12px 0 #e6b88a, 0 15px 20px rgba(92,64,51,0.15);
+            overflow: hidden;
         }
 
         header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            border-bottom: 3px dashed #ffd1a4;
-            padding-bottom: 20px;
-            margin-bottom: 25px;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 3px dashed #ffd9b3;
         }
-
-        h2 {
-            font-size: 1.8rem;
-            color: #ff8c21;
+        header h2 {
+            font-size: 1.6rem;
+            font-family: 'Arial Black', sans-serif;
+            color: #ff751a;
         }
 
         .lang-btn {
-            background: #ff8c21;
-            color: white;
-            border: none;
-            padding: 8px 18px;
-            border-radius: 20px;
-            cursor: pointer;
-            font-weight: bold;
-            box-shadow: 0 4px 0 #d46a00;
+            background: #ff944d; color: white; border: 2px solid white;
+            padding: 6px 14px; border-radius: 12px; cursor: pointer; font-weight: bold;
+            box-shadow: 0 3px 0 #cc5200; transition: 0.1s;
         }
-        .lang-btn:active {
-            transform: translateY(2px);
-            box-shadow: 0 2px 0 #d46a00;
+        .lang-btn:active { transform: translateY(2px); box-shadow: 0 1px 0 #cc5200; }
+
+        /* Window list container scrollable */
+        .items-scroll-area {
+            flex: 1;
+            overflow-y: auto;
+            padding-right: 5px;
         }
 
+        /* Menu Card Items */
         .menu-item {
-            display: flex;
-            gap: 20px;
-            margin-bottom: 25px;
-            padding-bottom: 25px;
-            border-bottom: 1px solid #ffeada;
+            display: none; /* Controlled dynamically via JS active filter tabs */
+            gap: 15px;
+            margin-bottom: 20px;
+            padding: 14px;
+            background: #ffffff;
+            border: 3px solid #ffe6cc;
+            border-radius: 20px;
             align-items: center;
+            box-shadow: 0 5px 0 #f5dec6;
         }
 
         .menu-img {
-            width: 100px;
-            height: 100px;
-            background-color: #ffeada;
-            border-radius: 16px;
+            width: 130px; height: 130px;
+            background-color: #fff2e6;
+            border-radius: 14px;
             object-fit: cover;
-            border: 3px solid #ffd1a4;
+            border: 2px solid #ffcc99;
         }
 
-        .menu-details {
-            flex: 1;
-        }
+        .menu-details { flex: 1; }
+        .menu-details h3 { font-size: 1.15rem; color: #5c4033; margin-bottom: 4px; }
+        .menu-details p { font-size: 0.9rem; color: #8c6653; line-height: 1.3; }
 
-        .menu-details h3 {
-            margin-bottom: 6px;
-            font-size: 1.2rem;
-            color: #333;
-        }
-
-        .menu-details p {
-            font-size: 0.95rem;
-            color: #777;
-            line-height: 1.4;
-        }
-
+        /* Quantity controls */
         .controls {
-            display: flex;
-            align-items: center;
-            gap: 12px;
+            display: flex; align-items: center; gap: 10px;
+            background: #fff2e6; padding: 4px 10px; border-radius: 20px; border: 2px solid #ffd9b3;
         }
-
         .btn-qty {
-            background: #ffeedf;
-            border: 2px solid #ffd1a4;
-            color: #ff8c21;
-            width: 36px;
-            height: 36px;
-            border-radius: 50%;
-            cursor: pointer;
-            font-weight: bold;
-            font-size: 1.3rem;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            background: #ffffff; border: 2px solid #ffb366; color: #ff751a;
+            width: 28px; height: 28px; border-radius: 50%; cursor: pointer;
+            font-weight: bold; font-size: 1.1rem; display: flex; align-items: center; justify-content: center;
+            box-shadow: 0 2px 0 #ffb366;
         }
-
-        .btn-qty:hover { background: #ffd1a4; }
-
-        .qty-num {
-            font-weight: bold;
-            font-size: 1.2rem;
-            min-width: 20px;
-            text-align: center;
-        }
-
-        .footer-action {
-            margin-top: 35px;
-        }
+        .btn-qty:active { transform: translateY(1px); box-shadow: 0 1px 0 #ffb366; }
+        .qty-num { font-weight: 900; font-size: 1.1rem; min-width: 15px; text-align: center; color: #ff751a; }
 
         .btn-order {
-            background: #8bc34a;
-            color: white;
-            border: none;
-            padding: 18px;
-            font-size: 1.3rem;
-            border-radius: 20px;
-            cursor: pointer;
-            font-weight: bold;
-            width: 100%;
-            box-shadow: 0 6px 0 #689f38;
-            text-shadow: 1px 1px 0 rgba(0,0,0,0.1);
+            background: linear-gradient(to bottom, #9ccc65, #7cb342);
+            color: white; border: 3px solid white; padding: 14px;
+            font-size: 1.3rem; font-radius: 20px; border-radius: 20px;
+            cursor: pointer; font-weight: 900; font-family: 'Arial Black', sans-serif;
+            width: 100%; box-shadow: 0 6px 0 #4f7328; text-shadow: 1px 1px 0 rgba(0,0,0,0.15);
+            margin-top: 15px;
+        }
+        .btn-order:active { transform: translateY(4px); box-shadow: 0 2px 0 #4f7328; }
+
+        /* Milk option toggle */
+        .option-toggle {
+            display: flex; gap: 8px;
+        }
+        .option-btn {
+            background: #ffffff; border: 2px solid #ffcc99; color: #8c6653;
+            padding: 6px 12px; border-radius: 12px; cursor: pointer;
+            font-size: 0.9rem; font-weight: bold;
+            transition: all 0.2s ease;
+        }
+        .option-btn:hover { background: #fff2e6; }
+        .option-btn.active {
+            background: #ff944d; color: white; border-color: #ff6600;
+            box-shadow: 0 2px 0 #cc5200;
         }
 
-        .btn-order:active {
-            transform: translateY(4px);
-            box-shadow: 0 2px 0 #689f38;
-        }
+        /* Scrollbar customizing */
+        .items-scroll-area::-webkit-scrollbar { width: 8px; }
+        .items-scroll-area::-webkit-scrollbar-track { background: #fff2e6; border-radius: 10px; }
+        .items-scroll-area::-webkit-scrollbar-thumb { background: #ffcc99; border-radius: 10px; }
 
         /* --- 3. PRINT TICKET LAYOUT --- */
         @media print {
-            body { background: white; padding: 0; color: black; }
-            #welcome-screen, header, .lang-btn, .controls, .footer-action, .menu-img { display: none !important; }
-            .menu-container { border: none; box-shadow: none; padding: 0; max-width: 100%; }
-            .menu-item { border-bottom: 1px dashed #000; padding: 12px 0; margin: 0; }
+            body { background: white; padding: 0; color: black; background-image: none; }
+            #welcome-screen, .sidebar, header, .lang-btn, .controls, .btn-order, .menu-img { display: none !important; }
+            .app-layout, .menu-main-content { border: none; box-shadow: none; padding: 0; max-width: 100%; height: auto; display: block; }
+            .menu-item { border-bottom: 1px dashed #000; border-radius: 0; box-shadow: none; padding: 12px 0; margin: 0; background: none; border: none; display: flex !important;}
             .menu-item:not(.has-qty) { display: none !important; }
             .print-header { display: block !important; text-align: center; margin-bottom: 20px; border-bottom: 2px solid #000; padding-bottom: 10px; }
             .print-qty { display: inline-block !important; font-weight: bold; margin-right: 15px; font-size: 1.3rem; }
@@ -229,60 +278,281 @@
 </head>
 <body>
 
-    <!-- Greeting Start Screen Backdrop -->
     <div id="welcome-screen">
-        <button class="enter-btn-overlay" onclick="enterSite()">
-            ENTER
-            <span>点击进入</span>
-        </button>
+        <div class="portal-wrapper">
+            <div class="sparkle sparkle-1"></div>
+            <div class="sparkle sparkle-2"></div>
+            <div class="sparkle sparkle-3"></div>
+            
+            <button class="enter-btn-image" onclick="enterSite()"></button>
+        </div>
     </div>
 
-    <!-- Main App Content -->
-    <div class="menu-container">
+    <div class="app-layout">
         
-        <div class="print-header">
-            <h2>Boochoo Order List / 订单明细</h2>
-            <p id="print-date"></p>
+        <div class="sidebar">
+            <div class="sidebar-title" id="sidebar-title" data-en="CATEGORIES" data-zh="菜单分类">菜单分类</div>
+            
+            <button class="tab-btn active-tab" onclick="switchCategory('dishes', this)" id="tab-dishes">
+                Dishes
+                <span>主菜类</span>
+            </button>
+            <button class="tab-btn" onclick="switchCategory('staple', this)" id="tab-staple">
+                Staple
+                <span>主食类</span>
+            </button>
+            <button class="tab-btn" onclick="switchCategory('beverages', this)" id="tab-beverages">
+                Beverages
+                <span>饮品类</span>
+            </button>
+            <button class="tab-btn" onclick="switchCategory('dessert', this)" id="tab-dessert">
+                Dessert
+                <span>甜点类</span>
+            </button>
+            <button class="tab-btn" onclick="switchCategory('alcoholic', this)" id="tab-alcoholic">
+                Alcoholic
+                <span>酒水类</span>
+            </button>
         </div>
 
-        <header>
-            <h2 id="main-title">Boochoo Menu</h2>
-            <button class="lang-btn" onclick="toggleLanguage()" id="lang-toggle">中文</button>
-        </header>
-
-        <div id="menu-items-wrapper">
-            <!-- Dish 1 -->
-            <div class="menu-item" id="item-1">
-                <img src="dish1.png" alt="Dish" class="menu-img" onerror="this.style.opacity='0';">
-                <div class="menu-details">
-                    <span class="print-qty" id="p-qty-1"></span>
-                    <h3 class="item-name" data-en="Signature Boochoo Bao" data-zh="招牌 Boochoo 包子">Signature Boochoo Bao</h3>
-                    <p class="item-desc" data-en="Steamed fluffy buns filled with delicious fillings." data-zh="松软可口的面皮包裹着美味鲜嫩的馅料。">Steamed fluffy buns filled with delicious fillings.</p>
-                </div>
-                <div class="controls">
-                    <button class="btn-qty" onclick="changeQty(1, -1)">-</button>
-                    <span class="qty-num" id="qty-1">0</span>
-                    <button class="btn-qty" onclick="changeQty(1, 1)">+</button>
-                </div>
+        <div class="menu-main-content">
+            <div class="print-header">
+                <h2>Boochoo Order List / 订单明细</h2>
+                <p id="print-date"></p>
             </div>
 
-            <!-- Dish 2 -->
-            <div class="menu-item" id="item-2">
-                <img src="dish2.png" alt="Dish" class="menu-img" onerror="this.style.opacity='0';">
-                <div class="menu-details">
-                    <span class="print-qty" id="p-qty-2"></span>
-                    <h3 class="item-name" data-en="Boochoo Special Bubble Tea" data-zh="Boochoo 特调啵啵奶茶">Boochoo Special Bubble Tea</h3>
-                    <p class="item-desc" data-en="Creamy classic house milk tea complete with brown sugar boba pearls." data-zh="香浓经典手调奶茶，配上Q弹黑糖啵啵明珠。">Creamy classic house milk tea complete with brown sugar boba pearls.</p>
-                </div>
-                <div class="controls">
-                    <button class="btn-qty" onclick="changeQty(2, -1)">-</button>
-                    <span class="qty-num" id="qty-2">0</span>
-                    <button class="btn-qty" onclick="changeQty(2, 1)">+</button>
-                </div>
-            </div>
-        </div>
+            <header>
+                <h2 id="main-title">Dishes Menu</h2>
+                <button class="lang-btn" onclick="toggleLanguage()" id="lang-toggle">中文</button>
+            </header>
 
-        <div class="footer-action">
+            <div class="items-scroll-area" id="menu-items-wrapper">
+                
+                <div class="menu-item category-dishes" id="item-1" style="display: flex;">
+                    <img src="graphics/dish/tomato_beef.jpg" alt="Dish" class="menu-img" onerror="this.style.opacity='0';">
+                    <div class="menu-details">
+                        <span class="print-qty" id="p-qty-1"></span>
+                        <h3 class="item-name" data-en="Braised Beef Brisket with Tomato" data-zh="番茄炖牛腩">Braised Beef Brisket with Tomato</h3>
+                        <p class="item-desc" data-en="Tender beef brisket braised with fresh tomatoes" data-zh="新鲜番茄炖煮的软嫩牛腩">Tender beef brisket braised with fresh tomatoes</p>
+                    </div>
+                    <div class="controls">
+                        <button class="btn-qty" onclick="changeQty(1, -1)">-</button>
+                        <span class="qty-num" id="qty-1">0</span>
+                        <button class="btn-qty" onclick="changeQty(1, 1)">+</button>
+                    </div>
+                </div>
+
+                <div class="menu-item category-dishes" id="item-2" style="display: flex;">
+                    <img src="graphics/dish/veggies.jpg" alt="Dish" class="menu-img" onerror="this.style.opacity='0';">
+                    <div class="menu-details">
+                        <span class="print-qty" id="p-qty-2"></span>
+                        <h3 class="item-name" data-en="Stir-fried Vegetables" data-zh="清炒蔬菜">Stir-fried Vegetables</h3>
+                        <p class="item-desc" data-en="Fresh seasonal vegetables wok-tossed" data-zh="时令新鲜蔬菜清炒">Fresh seasonal vegetables wok-tossed</p>
+                    </div>
+                    <div class="controls">
+                        <button class="btn-qty" onclick="changeQty(2, -1)">-</button>
+                        <span class="qty-num" id="qty-2">0</span>
+                        <button class="btn-qty" onclick="changeQty(2, 1)">+</button>
+                    </div>
+                </div>
+
+                <div class="menu-item category-dishes" id="item-3" style="display: flex;">
+                    <img src="graphics/dish/seared_chickenWing.jpg" alt="Dish" class="menu-img" onerror="this.style.opacity='0';">
+                    <div class="menu-details">
+                        <span class="print-qty" id="p-qty-3"></span>
+                        <h3 class="item-name" data-en="Pan-fried Chicken Wings" data-zh="香煎鸡翅">Pan-fried Chicken Wings</h3>
+                        <p class="item-desc" data-en="Crispy pan-fried chicken wings" data-zh="外脆里嫩的香煎鸡翅">Crispy pan-fried chicken wings</p>
+                    </div>
+                    <div class="controls">
+                        <button class="btn-qty" onclick="changeQty(3, -1)">-</button>
+                        <span class="qty-num" id="qty-3">0</span>
+                        <button class="btn-qty" onclick="changeQty(3, 1)">+</button>
+                    </div>
+                </div>
+
+                <div class="menu-item category-dishes" id="item-4" style="display: flex;">
+                    <img src="graphics/dish/coke_chicken.jpg" alt="Dish" class="menu-img" onerror="this.style.opacity='0';">
+                    <div class="menu-details">
+                        <span class="print-qty" id="p-qty-4"></span>
+                        <h3 class="item-name" data-en="Coke Chicken Wings" data-zh="可乐鸡翅">Coke Chicken Wings</h3>
+                        <p class="item-desc" data-en="Chicken wings braised in cola sauce" data-zh="可乐酱汁炖鸡翅">Chicken wings braised in cola sauce</p>
+                    </div>
+                    <div class="controls">
+                        <button class="btn-qty" onclick="changeQty(4, -1)">-</button>
+                        <span class="qty-num" id="qty-4">0</span>
+                        <button class="btn-qty" onclick="changeQty(4, 1)">+</button>
+                    </div>
+                </div>
+
+                <div class="menu-item category-dishes" id="item-5" style="display: flex;">
+                    <img src="graphics/dish/torn_chicken.jpg" alt="Dish" class="menu-img" onerror="this.style.opacity='0';">
+                    <div class="menu-details">
+                        <span class="print-qty" id="p-qty-5"></span>
+                        <h3 class="item-name" data-en="Hand-torn Chicken" data-zh="手撕鸡">Hand-torn Chicken</h3>
+                        <p class="item-desc" data-en="Tender chicken hand-shredded and served" data-zh="嫩滑多汁的手撕鸡">Tender chicken hand-shredded and served</p>
+                    </div>
+                    <div class="controls">
+                        <button class="btn-qty" onclick="changeQty(5, -1)">-</button>
+                        <span class="qty-num" id="qty-5">0</span>
+                        <button class="btn-qty" onclick="changeQty(5, 1)">+</button>
+                    </div>
+                </div>
+
+                <div class="menu-item category-dishes" id="item-6" style="display: flex;">
+                    <img src="graphics/dish/lemon_salmon.jpg" alt="Dish" class="menu-img" onerror="this.style.opacity='0';">
+                    <div class="menu-details">
+                        <span class="print-qty" id="p-qty-6"></span>
+                        <h3 class="item-name" data-en="Lemon Salmon" data-zh="柠檬三文鱼">Lemon Salmon</h3>
+                        <p class="item-desc" data-en="Fresh salmon fillet with lemon sauce" data-zh="柠檬酸汁新鲜三文鱼">Fresh salmon fillet with lemon sauce</p>
+                    </div>
+                    <div class="controls">
+                        <button class="btn-qty" onclick="changeQty(6, -1)">-</button>
+                        <span class="qty-num" id="qty-6">0</span>
+                        <button class="btn-qty" onclick="changeQty(6, 1)">+</button>
+                    </div>
+                </div>
+
+                <div class="menu-item category-dishes" id="item-7" style="display: flex;">
+                    <img src="graphics/dish/pork_watercress.jpg" alt="Dish" class="menu-img" onerror="this.style.opacity='0';">
+                    <div class="menu-details">
+                        <span class="print-qty" id="p-qty-7"></span>
+                        <h3 class="item-name" data-en="Pork Rib with Chinese Cabbage Soup" data-zh="排骨西洋菜汤">Pork Rib with Chinese Cabbage Soup</h3>
+                        <p class="item-desc" data-en="Tender pork ribs in nutritious broth with leafy greens" data-zh="排骨和西洋菜熬制的营养鲜汤">Tender pork ribs in nutritious broth with leafy greens</p>
+                    </div>
+                    <div class="controls">
+                        <button class="btn-qty" onclick="changeQty(7, -1)">-</button>
+                        <span class="qty-num" id="qty-7">0</span>
+                        <button class="btn-qty" onclick="changeQty(7, 1)">+</button>
+                    </div>
+                </div>
+
+                <div class="menu-item category-dishes" id="item-8" style="display: flex;">
+                    <img src="graphics/dish/braised_pork.jpg" alt="Dish" class="menu-img" onerror="this.style.opacity='0';">
+                    <div class="menu-details">
+                        <span class="print-qty" id="p-qty-8"></span>
+                        <h3 class="item-name" data-en="Braised Red Pork" data-zh="红烧肉">Braised Red Pork</h3>
+                        <p class="item-desc" data-en="Succulent pork belly braised until tender" data-zh="酱香甘美的红烧五花肉">Succulent pork belly braised until tender</p>
+                    </div>
+                    <div class="controls">
+                        <button class="btn-qty" onclick="changeQty(8, -1)">-</button>
+                        <span class="qty-num" id="qty-8">0</span>
+                        <button class="btn-qty" onclick="changeQty(8, 1)">+</button>
+                    </div>
+                </div>
+
+                <div class="menu-item category-dishes" id="item-9" style="display: flex;">
+                    <img src="graphics/dish/mapo_tofu.jpg" alt="Dish" class="menu-img" onerror="this.style.opacity='0';">
+                    <div class="menu-details">
+                        <span class="print-qty" id="p-qty-9"></span>
+                        <h3 class="item-name" data-en="Mapo Tofu" data-zh="麻婆豆腐">Mapo Tofu</h3>
+                        <p class="item-desc" data-en="Silky tofu in spicy Sichuan sauce" data-zh="嫩滑豆腐配麻辣四川酱汁">Silky tofu in spicy Sichuan sauce</p>
+                    </div>
+                    <div class="controls">
+                        <button class="btn-qty" onclick="changeQty(9, -1)">-</button>
+                        <span class="qty-num" id="qty-9">0</span>
+                        <button class="btn-qty" onclick="changeQty(9, 1)">+</button>
+                    </div>
+                </div>
+
+                <div class="menu-item category-staple" id="item-10">
+                    <img src="graphics/carb/rice.jpg" alt="Staple" class="menu-img" onerror="this.style.opacity='0';">
+                    <div class="menu-details">
+                        <span class="print-qty" id="p-qty-10"></span>
+                        <h3 class="item-name" data-en="Steamed Rice" data-zh="米饭">Steamed Rice</h3>
+                        <p class="item-desc" data-en="Fluffy steamed jasmine rice" data-zh="香软的蒸米饭">Fluffy steamed jasmine rice</p>
+                    </div>
+                    <div class="controls">
+                        <button class="btn-qty" onclick="changeQty(10, -1)">-</button>
+                        <span class="qty-num" id="qty-10">0</span>
+                        <button class="btn-qty" onclick="changeQty(10, 1)">+</button>
+                    </div>
+                </div>
+
+                <div class="menu-item category-staple" id="item-11">
+                    <img src="graphics/carb/noodles.jpg" alt="Staple" class="menu-img" onerror="this.style.opacity='0';">
+                    <div class="menu-details">
+                        <span class="print-qty" id="p-qty-11"></span>
+                        <h3 class="item-name" data-en="Noodles" data-zh="面条">Noodles</h3>
+                        <p class="item-desc" data-en="Tender egg noodles" data-zh="蛋面条">Tender egg noodles</p>
+                    </div>
+                    <div class="controls">
+                        <button class="btn-qty" onclick="changeQty(11, -1)">-</button>
+                        <span class="qty-num" id="qty-11">0</span>
+                        <button class="btn-qty" onclick="changeQty(11, 1)">+</button>
+                    </div>
+                </div>
+
+                <div class="menu-item category-beverages" id="item-12">
+                    <img src="graphics/drink/water.jpg" alt="Beverage" class="menu-img" onerror="this.style.opacity='0';">
+                    <div class="menu-details">
+                        <span class="print-qty" id="p-qty-12"></span>
+                        <h3 class="item-name" data-en="Water" data-zh="水">Water</h3>
+                        <p class="item-desc" data-en="Fresh bottled water" data-zh="新鲜矿泉水">Fresh bottled water</p>
+                        <div class="option-toggle" style="margin-top: 8px;">
+                            <button class="option-btn active" onclick="toggleWaterOption(this, 'roomtemp')" data-en="Room Temp" data-zh="常温">常温</button>
+                            <button class="option-btn" onclick="toggleWaterOption(this, 'ice')" data-en="Ice" data-zh="冰">冰</button>
+                            <button class="option-btn" onclick="toggleWaterOption(this, 'hot')" data-en="Hot" data-zh="热">热</button>
+                        </div>
+                    </div>
+                    <div class="controls">
+                        <button class="btn-qty" onclick="changeQty(12, -1)">-</button>
+                        <span class="qty-num" id="qty-12">0</span>
+                        <button class="btn-qty" onclick="changeQty(12, 1)">+</button>
+                    </div>
+                </div>
+
+                <div class="menu-item category-beverages" id="item-13">
+                    <img src="graphics/drink/coke.jpg" alt="Beverage" class="menu-img" onerror="this.style.opacity='0';">
+                    <div class="menu-details">
+                        <span class="print-qty" id="p-qty-13"></span>
+                        <h3 class="item-name" data-en="Cola" data-zh="可乐">Cola</h3>
+                        <p class="item-desc" data-en="Refreshing cola" data-zh="爽口可乐">Refreshing cola</p>
+                        <div class="option-toggle" style="margin-top: 8px;">
+                            <button class="option-btn active" onclick="toggleColaOption(this, 'regular')" data-en="Regular" data-zh="常规">常规</button>
+                            <button class="option-btn" onclick="toggleColaOption(this, 'diet')" data-en="Diet" data-zh="无糖">无糖</button>
+                        </div>
+                    </div>
+                    <div class="controls">
+                        <button class="btn-qty" onclick="changeQty(13, -1)">-</button>
+                        <span class="qty-num" id="qty-13">0</span>
+                        <button class="btn-qty" onclick="changeQty(13, 1)">+</button>
+                    </div>
+                </div>
+
+                <div class="menu-item category-beverages" id="item-14">
+                    <img src="graphics/drink/sprite.jpg" alt="Beverage" class="menu-img" onerror="this.style.opacity='0';">
+                    <div class="menu-details">
+                        <span class="print-qty" id="p-qty-14"></span>
+                        <h3 class="item-name" data-en="Sprite" data-zh="雪碧">Sprite</h3>
+                        <p class="item-desc" data-en="Crisp lemon-lime soda" data-zh="清爽柠檬味汽水">Crisp lemon-lime soda</p>
+                    </div>
+                    <div class="controls">
+                        <button class="btn-qty" onclick="changeQty(14, -1)">-</button>
+                        <span class="qty-num" id="qty-14">0</span>
+                        <button class="btn-qty" onclick="changeQty(14, 1)">+</button>
+                    </div>
+                </div>
+
+                <div class="menu-item category-beverages" id="item-15">
+                    <img src="graphics/drink/black_sugar_tapioca_milk.jpg" alt="Beverage" class="menu-img" onerror="this.style.opacity='0';">
+                    <div class="menu-details">
+                        <span class="print-qty" id="p-qty-15"></span>
+                        <h3 class="item-name" data-en="Black Sugar Tapioca Milk" data-zh="黑糖啵啵鲜奶">Black Sugar Tapioca Milk</h3>
+                        <p class="item-desc" data-en="Creamy milk with chewy tapioca pearls and brown sugar" data-zh="奶香浓郁配上Q弹珍珠和黑糖">Creamy milk with chewy tapioca pearls and brown sugar</p>
+                        <div class="option-toggle" style="margin-top: 8px;">
+                            <button class="option-btn active" onclick="toggleMilkOption(this, 'regular')" data-en="Regular Milk" data-zh="牛奶">牛奶</button>
+                            <button class="option-btn" onclick="toggleMilkOption(this, 'oat')" data-en="Oat Milk" data-zh="燕麦奶">燕麦奶</button>
+                        </div>
+                    </div>
+                    <div class="controls">
+                        <button class="btn-qty" onclick="changeQty(15, -1)">-</button>
+                        <span class="qty-num" id="qty-15">0</span>
+                        <button class="btn-qty" onclick="changeQty(15, 1)">+</button>
+                    </div>
+                </div>
+
+            </div>
+
             <button class="btn-order" onclick="printReceipt()" id="order-btn">Hit Order & Print Menu</button>
         </div>
     </div>
@@ -292,22 +562,102 @@
             document.getElementById('welcome-screen').classList.add('hidden-screen');
         }
 
-        let currentLang = 'en';
-        const itemQuantities = { 1: 0, 2: 0 };
+        let currentLang = 'zh';
+        let currentCategory = 'dishes';
+        const itemQuantities = { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0, 7: 0, 8: 0, 9: 0, 10: 0, 11: 0, 12: 0, 13: 0, 14: 0, 15: 0 };
+
+        // SWITCH CATEGORY TAB FILTER FUNCTION
+        function switchCategory(categoryName, tabElement) {
+            currentCategory = categoryName;
+
+            // Update Tab Button styles
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active-tab'));
+            tabElement.classList.add('active-tab');
+
+            // Dynamically show items matching category
+            document.querySelectorAll('.menu-item').forEach(item => {
+                if (item.classList.contains(`category-${categoryName}`)) {
+                    item.style.display = 'flex';
+                } else {
+                    item.style.display = 'none';
+                }
+            });
+
+            // Update header title based on current language context
+            updateHeaderTitle();
+        }
+
+        function updateHeaderTitle() {
+            const titleElement = document.getElementById('main-title');
+            if (currentLang === 'en') {
+                const enNames = { 'dishes': 'Dishes Menu', 'staple': 'Staple Foods Menu', 'beverages': 'Beverages Menu', 'dessert': 'Dessert Menu', 'alcoholic': 'Alcoholic Drinks Menu' };
+                titleElement.innerText = enNames[currentCategory];
+            } else {
+                const zhNames = { 'dishes': '主菜类菜单', 'staple': '主食类菜单', 'beverages': '饮品类菜单', 'dessert': '甜点类菜单', 'alcoholic': '酒水类菜单' };
+                titleElement.innerText = zhNames[currentCategory];
+            }
+        }
 
         function toggleLanguage() {
             currentLang = currentLang === 'en' ? 'zh' : 'en';
             
-            document.getElementById('main-title').innerText = currentLang === 'en' ? 'Boochoo Menu' : 'Boochoo 啵啵菜单';
             document.getElementById('lang-toggle').innerText = currentLang === 'en' ? '中文' : 'English';
             document.getElementById('order-btn').innerText = currentLang === 'en' ? 'Hit Order & Print Menu' : '确认订单并打印菜单';
+            document.getElementById('sidebar-title').innerText = currentLang === 'en' ? 'CATEGORIES' : '菜单分类';
+            
+            updateHeaderTitle();
 
             document.querySelectorAll('.menu-item').forEach(item => {
                 const nameNode = item.querySelector('.item-name');
                 const descNode = item.querySelector('.item-desc');
                 nameNode.innerText = nameNode.getAttribute(`data-${currentLang}`);
                 descNode.innerText = descNode.getAttribute(`data-${currentLang}`);
+                
+                // Update option buttons language
+                const optionBtns = item.querySelectorAll('.option-btn');
+                optionBtns.forEach(btn => {
+                    btn.innerText = btn.getAttribute(`data-${currentLang}`);
+                });
             });
+        }
+
+        function toggleMilkOption(button, option) {
+            // Remove active class from all option buttons in this item
+            const allOptionBtns = button.parentElement.querySelectorAll('.option-btn');
+            allOptionBtns.forEach(btn => btn.classList.remove('active'));
+            
+            // Add active class to clicked button
+            button.classList.add('active');
+        }
+
+        function toggleColaOption(button, option) {
+            // Remove active class from all option buttons in this item
+            const allOptionBtns = button.parentElement.querySelectorAll('.option-btn');
+            allOptionBtns.forEach(btn => btn.classList.remove('active'));
+            
+            // Add active class to clicked button
+            button.classList.add('active');
+        }
+
+        function toggleWaterOption(button, option) {
+            // Remove active class from all option buttons in this item
+            const allOptionBtns = button.parentElement.querySelectorAll('.option-btn');
+            allOptionBtns.forEach(btn => btn.classList.remove('active'));
+            
+            // Add active class to clicked button
+            button.classList.add('active');
+            
+            // Change image based on selected option
+            const menuItem = button.closest('.menu-item');
+            const imgElement = menuItem.querySelector('.menu-img');
+            
+            if (option === 'ice') {
+                imgElement.src = 'graphics/drink/water_iced.jpg';
+            } else if (option === 'hot') {
+                imgElement.src = 'graphics/drink/hot_water.jpg';
+            } else {
+                imgElement.src = 'graphics/drink/water.jpg';
+            }
         }
 
         function changeQty(itemId, amount) {
@@ -336,9 +686,32 @@
                 return;
             }
 
-            document.getElementById('print-date').innerText = new Date().toLocaleString();
-            window.print();
+            alert(currentLang === 'en' ? "Order submitted successfully!" : "订单已成功提交！");
         }
+
+        function initializeLanguage() {
+            document.getElementById('lang-toggle').innerText = 'English';
+            document.getElementById('order-btn').innerText = '确认订单并打印菜单';
+            document.getElementById('sidebar-title').innerText = '菜单分类';
+            updateHeaderTitle();
+            
+            document.querySelectorAll('.menu-item').forEach(item => {
+                const nameNode = item.querySelector('.item-name');
+                const descNode = item.querySelector('.item-desc');
+                if (nameNode && descNode) {
+                    nameNode.innerText = nameNode.getAttribute('data-zh');
+                    descNode.innerText = descNode.getAttribute('data-zh');
+                }
+                
+                // Initialize option buttons to Chinese
+                const optionBtns = item.querySelectorAll('.option-btn');
+                optionBtns.forEach(btn => {
+                    btn.innerText = btn.getAttribute('data-zh');
+                });
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', initializeLanguage);
     </script>
 </body>
 </html>
