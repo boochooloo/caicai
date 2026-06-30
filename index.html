@@ -350,9 +350,10 @@
 
         @media (max-width: 900px) {
             .app-layout {
+                display: flex;
                 flex-direction: column;
-                flex-wrap: wrap;
-                height: calc(100vh - 30px);
+                gap: 16px;
+                height: auto;
                 margin: 15px 10px 15px;
             }
 
@@ -364,18 +365,30 @@
 
             .menu-main-content {
                 width: 100%;
-                height: calc(100vh - 190px);
+                height: auto;
+                max-height: none;
+                padding: 18px;
+            }
+
+            .order-form {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .order-form label,
+            .order-form input {
+                width: 100%;
             }
 
             .items-scroll-area {
                 grid-template-columns: 1fr;
                 padding-right: 0;
-                max-height: calc(100% - 10px);
+                max-height: none;
             }
 
             .menu-item {
                 grid-template-columns: 1fr;
-                align-items: center;
+                align-items: stretch;
             }
 
             .menu-img {
@@ -385,8 +398,13 @@
                 border-radius: 18px;
             }
 
+            .menu-details {
+                padding-top: 12px;
+            }
+
             .controls {
-                justify-content: flex-start;
+                width: 100%;
+                justify-content: space-between;
                 flex-wrap: wrap;
             }
         }
@@ -397,23 +415,33 @@
             }
 
             .sidebar {
-                padding: 16px 12px;
+                padding: 14px 10px;
                 border-radius: 22px;
             }
 
             .tab-btn {
-                font-size: 1rem;
-                padding: 12px 10px;
+                font-size: 0.98rem;
+                padding: 10px 10px;
                 border-radius: 16px;
             }
 
+            header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+            }
+
             header h2 {
-                font-size: 1.4rem;
+                font-size: 1.3rem;
             }
 
             .lang-btn,
             .btn-order {
-                font-size: 1rem;
+                font-size: 0.98rem;
+            }
+
+            .order-status {
+                font-size: 0.95rem;
             }
 
             .menu-details h3 {
@@ -429,8 +457,46 @@
             }
 
             .btn-qty {
-                width: 32px;
-                height: 32px;
+                width: 30px;
+                height: 30px;
+            }
+
+            .option-btn {
+                padding: 6px 10px;
+                font-size: 0.85rem;
+            }
+        }
+
+        @media (max-width: 450px) {
+            .app-layout {
+                margin: 12px 8px 12px;
+            }
+
+            .sidebar {
+                border-radius: 18px;
+                padding: 12px 10px;
+            }
+
+            .tab-btn {
+                font-size: 0.92rem;
+                padding: 10px 8px;
+            }
+
+            .menu-main-content {
+                padding: 16px;
+            }
+
+            .lang-btn,
+            .btn-order {
+                width: 100%;
+            }
+
+            .menu-item {
+                padding: 16px;
+            }
+
+            .menu-details h3 {
+                font-size: 0.98rem;
             }
         }
     </style>
