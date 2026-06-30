@@ -22,7 +22,8 @@
             background-size: cover;
             background-attachment: scroll;
             color: #5c4033;
-            overflow: hidden;
+            overflow-x: hidden;
+            overflow-y: auto;
             min-height: 100vh;
         }
 
@@ -723,14 +724,15 @@
         </div>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/supabase.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js/dist/umd/supabase.js"></script>
     <script>
         function enterSite() {
             document.getElementById('welcome-screen').classList.add('hidden-screen');
         }
 
-        const SUPABASE_URL = 'https://vmongicasctytfmnorui.supabase.co/rest/v1/boochoo meal data';
+        const SUPABASE_URL = 'https://vmongicasctytfmnorui.supabase.co';
         const SUPABASE_ANON_KEY = 'sb_publishable_wfE5iimxJBnDZ91JCwLJVQ_NvOUYqTk';
+        const ORDER_TABLE = 'orders';
         let supabaseClient = null;
 
         let currentLang = 'zh';
@@ -879,6 +881,13 @@
             return orderItems;
         }
 
+        function saveOrderLocally(orderPayload) {
+            const storageKey = 'boochoo_pending_orders';
+            const storedOrders = JSON.parse(localStorage.getItem(storageKey) || '[]');
+            storedOrders.push(orderPayload);
+            localStorage.setItem(storageKey, JSON.stringify(storedOrders));
+        }
+
         async function submitOrder() {
             const nameRow = document.getElementById('order-name-row');
             const nameInput = document.getElementById('orderer-name');
@@ -931,11 +940,23 @@
             };
 
             const { error } = await supabaseClient
-                .from('orders')
+                .from(ORDER_TABLE)
                 .insert([orderPayload]);
 
             if (error) {
-                statusNode.textContent = currentLang === 'en' ? `Order failed: ${error.message}` : `订单失败: ${error.message}`;
+                if (error.message?.includes("Could not find the table 'public.orders'")) {
+                    saveOrderLocally(orderPayload);
+                    statusNode.textContent = currentLang === 'en'
+                        ? "Supabase error: table 'orders' is missing. Order saved locally in browser storage. Create a public table named orders with columns name, order_data, created_at."
+                        : "Supabase 错误：缺少名为 orders 的表。订单已保存在本地浏览器存储中。请创建一个名为 orders 的公开表，包含 name、order_data、created_at 列。";
+                } else if (error.message?.includes('violates row-level security policy')) {
+                    saveOrderLocally(orderPayload);
+                    statusNode.textContent = currentLang === 'en'
+                        ? "Supabase error: row-level security blocked the insert. Create a table policy allowing anonymous inserts into orders, or use a server-side service role key. Order saved locally."
+                        : "Supabase 错误：行级安全策略阻止了插入。请为 orders 表创建允许匿名插入的策略，或使用服务器端 service role 密钥。订单已保存在本地。";
+                } else {
+                    statusNode.textContent = currentLang === 'en' ? `Order failed: ${error.message}` : `订单失败: ${error.message}`;
+                }
                 statusNode.style.color = '#d32f2f';
                 return;
             }
