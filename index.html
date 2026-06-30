@@ -11,13 +11,19 @@
             margin: 0;
             padding: 0;
         }
+        html, body {
+            height: 100%;
+            min-height: 100%;
+        }
+
         body {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            background: #fff2e6 url('graphics/menu_background.jpg') no-repeat center center fixed;
+            background: #fff2e6 url('graphics/menu_background.jpg') no-repeat center center;
             background-size: cover;
+            background-attachment: scroll;
             color: #5c4033;
-            overflow-x: hidden;
-            height: 100vh;
+            overflow: hidden;
+            min-height: 100vh;
         }
 
         /* --- 1. WELCOME GREETING SCREEN --- */
@@ -38,8 +44,8 @@
 
         .portal-wrapper {
             position: relative;
-            width: 340px;
-            height: 200px;
+            width: min(420px, 90vw);
+            height: auto;
             margin-top: 100px;
             display: flex;
             justify-content: center;
@@ -51,8 +57,9 @@
             background-size: contain;
             border: none;
             cursor: pointer;
-            width: 750px;
-            height: 375px;
+            width: min(900px, 90vw);
+            height: auto;
+            aspect-ratio: 2.5 / 1;
             margin-top: 20px;
             transition: transform 0.1s ease;
             animation: cuteBounce 2.5s infinite ease-in-out;
@@ -90,21 +97,26 @@
 
         /* --- 2. MAIN MENU LAYOUT WITH SIDEBAR --- */
         .app-layout {
-            display: flex;
-            max-width: 900px;
+            display: grid;
+            grid-template-columns: 260px minmax(0, 1fr);
+            align-items: stretch;
+            max-width: 1300px;
+            width: min(98vw, 1300px);
+            min-height: calc(100vh - 40px);
             height: calc(100vh - 40px);
             margin: 20px auto;
             gap: 20px;
             padding: 0 15px;
+            overflow: hidden;
         }
 
         /* Left Side Bar Container */
         .sidebar {
-            width: 220px;
+            min-height: 100%;
             background: rgba(255, 253, 250, 0.95);
             border: 5px solid #ffcc99;
             border-radius: 28px;
-            padding: 20px 12px;
+            padding: 20px 14px;
             display: flex;
             flex-direction: column;
             gap: 15px;
@@ -154,7 +166,9 @@
 
         /* Right Side Content Container */
         .menu-main-content {
-            flex: 1;
+            min-width: 0;
+            min-height: 0;
+            max-height: 100%;
             background: rgba(255, 253, 250, 0.95);
             border: 5px solid #ffcc99;
             border-radius: 28px;
@@ -186,32 +200,90 @@
         }
         .lang-btn:active { transform: translateY(2px); box-shadow: 0 1px 0 #cc5200; }
 
+        .order-form {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 18px;
+        }
+        .order-form label {
+            font-weight: 700;
+            color: #5c4033;
+            min-width: 100px;
+        }
+        .order-form input {
+            flex: 1 1 260px;
+            padding: 12px 14px;
+            border: 2px solid #ffe6cc;
+            border-radius: 18px;
+            background: #fffdfa;
+            color: #5c4033;
+            font-size: 1rem;
+        }
+        .order-status {
+            width: 100%;
+            min-height: 1.5rem;
+            color: #5c4033;
+            font-size: 0.95rem;
+            margin-top: 4px;
+        }
+        .hidden-element {
+            display: none;
+        }
+
         /* Window list container scrollable */
         .items-scroll-area {
-            flex: 1;
+            display: grid;
+            grid-template-columns: repeat(2, minmax(320px, 1fr));
+            gap: 20px;
+            flex: 1 1 auto;
+            min-height: 0;
             overflow-y: auto;
-            padding-right: 5px;
+            overflow-x: hidden;
+            padding-right: 6px;
+            padding-bottom: 12px;
         }
 
         /* Menu Card Items */
         .menu-item {
             display: none; /* Controlled dynamically via JS active filter tabs */
-            gap: 15px;
-            margin-bottom: 20px;
-            padding: 14px;
+            grid-template-columns: minmax(180px, 240px) 1fr;
+            grid-template-areas: "image details" "image controls";
+            gap: 18px;
+            padding: 20px;
             background: #ffffff;
             border: 3px solid #ffe6cc;
             border-radius: 20px;
-            align-items: center;
+            align-items: start;
             box-shadow: 0 5px 0 #f5dec6;
+            display: grid;
         }
 
         .menu-img {
-            width: 130px; height: 130px;
+            grid-area: image;
+            width: 100%;
+            max-width: 240px;
+            height: auto;
+            aspect-ratio: 1 / 1;
             background-color: #fff2e6;
             border-radius: 14px;
             object-fit: cover;
             border: 2px solid #ffcc99;
+        }
+
+        .menu-details {
+            grid-area: details;
+            min-width: 0;
+        }
+
+        .controls {
+            grid-area: controls;
+            display: flex; align-items: center; gap: 10px;
+            background: #fff2e6; padding: 8px 12px; border-radius: 20px; border: 2px solid #ffd9b3;
+            justify-self: start;
+            align-self: start;
         }
 
         .menu-details { flex: 1; }
@@ -274,6 +346,92 @@
             .print-qty { display: inline-block !important; font-weight: bold; margin-right: 15px; font-size: 1.3rem; }
         }
         .print-header, .print-qty { display: none; }
+
+        @media (max-width: 900px) {
+            .app-layout {
+                flex-direction: column;
+                flex-wrap: wrap;
+                height: calc(100vh - 30px);
+                margin: 15px 10px 15px;
+            }
+
+            .sidebar {
+                width: 100%;
+                min-height: 0;
+                height: auto;
+            }
+
+            .menu-main-content {
+                width: 100%;
+                height: calc(100vh - 190px);
+            }
+
+            .items-scroll-area {
+                grid-template-columns: 1fr;
+                padding-right: 0;
+                max-height: calc(100% - 10px);
+            }
+
+            .menu-item {
+                grid-template-columns: 1fr;
+                align-items: center;
+            }
+
+            .menu-img {
+                width: 100%;
+                height: auto;
+                min-height: 180px;
+                border-radius: 18px;
+            }
+
+            .controls {
+                justify-content: flex-start;
+                flex-wrap: wrap;
+            }
+        }
+
+        @media (max-width: 600px) {
+            body {
+                background-position: center top;
+            }
+
+            .sidebar {
+                padding: 16px 12px;
+                border-radius: 22px;
+            }
+
+            .tab-btn {
+                font-size: 1rem;
+                padding: 12px 10px;
+                border-radius: 16px;
+            }
+
+            header h2 {
+                font-size: 1.4rem;
+            }
+
+            .lang-btn,
+            .btn-order {
+                font-size: 1rem;
+            }
+
+            .menu-details h3 {
+                font-size: 1rem;
+            }
+
+            .menu-details p {
+                font-size: 0.87rem;
+            }
+
+            .controls {
+                gap: 8px;
+            }
+
+            .btn-qty {
+                width: 32px;
+                height: 32px;
+            }
+        }
     </style>
 </head>
 <body>
@@ -326,9 +484,17 @@
                 <button class="lang-btn" onclick="toggleLanguage()" id="lang-toggle">中文</button>
             </header>
 
+            <div class="order-form">
+                <div class="order-name-row hidden-element" id="order-name-row">
+                    <label for="orderer-name">Your name:</label>
+                    <input id="orderer-name" type="text" placeholder="Enter your name" autocomplete="name" />
+                </div>
+                <div class="order-status" id="order-status">Add items first, then press Submit Order to enter your name.</div>
+            </div>
+
             <div class="items-scroll-area" id="menu-items-wrapper">
                 
-                <div class="menu-item category-dishes" id="item-1" style="display: flex;">
+                <div class="menu-item category-dishes" id="item-1">
                     <img src="graphics/dish/tomato_beef.jpg" alt="Dish" class="menu-img" onerror="this.style.opacity='0';">
                     <div class="menu-details">
                         <span class="print-qty" id="p-qty-1"></span>
@@ -342,7 +508,7 @@
                     </div>
                 </div>
 
-                <div class="menu-item category-dishes" id="item-2" style="display: flex;">
+                <div class="menu-item category-dishes" id="item-2">
                     <img src="graphics/dish/veggies.jpg" alt="Dish" class="menu-img" onerror="this.style.opacity='0';">
                     <div class="menu-details">
                         <span class="print-qty" id="p-qty-2"></span>
@@ -356,7 +522,7 @@
                     </div>
                 </div>
 
-                <div class="menu-item category-dishes" id="item-3" style="display: flex;">
+                <div class="menu-item category-dishes" id="item-3">
                     <img src="graphics/dish/seared_chickenWing.jpg" alt="Dish" class="menu-img" onerror="this.style.opacity='0';">
                     <div class="menu-details">
                         <span class="print-qty" id="p-qty-3"></span>
@@ -370,7 +536,7 @@
                     </div>
                 </div>
 
-                <div class="menu-item category-dishes" id="item-4" style="display: flex;">
+                <div class="menu-item category-dishes" id="item-4">
                     <img src="graphics/dish/coke_chicken.jpg" alt="Dish" class="menu-img" onerror="this.style.opacity='0';">
                     <div class="menu-details">
                         <span class="print-qty" id="p-qty-4"></span>
@@ -384,7 +550,7 @@
                     </div>
                 </div>
 
-                <div class="menu-item category-dishes" id="item-5" style="display: flex;">
+                <div class="menu-item category-dishes" id="item-5">
                     <img src="graphics/dish/torn_chicken.jpg" alt="Dish" class="menu-img" onerror="this.style.opacity='0';">
                     <div class="menu-details">
                         <span class="print-qty" id="p-qty-5"></span>
@@ -398,7 +564,7 @@
                     </div>
                 </div>
 
-                <div class="menu-item category-dishes" id="item-6" style="display: flex;">
+                <div class="menu-item category-dishes" id="item-6">
                     <img src="graphics/dish/lemon_salmon.jpg" alt="Dish" class="menu-img" onerror="this.style.opacity='0';">
                     <div class="menu-details">
                         <span class="print-qty" id="p-qty-6"></span>
@@ -412,7 +578,7 @@
                     </div>
                 </div>
 
-                <div class="menu-item category-dishes" id="item-7" style="display: flex;">
+                <div class="menu-item category-dishes" id="item-7">
                     <img src="graphics/dish/pork_watercress.jpg" alt="Dish" class="menu-img" onerror="this.style.opacity='0';">
                     <div class="menu-details">
                         <span class="print-qty" id="p-qty-7"></span>
@@ -426,7 +592,7 @@
                     </div>
                 </div>
 
-                <div class="menu-item category-dishes" id="item-8" style="display: flex;">
+                <div class="menu-item category-dishes" id="item-8">
                     <img src="graphics/dish/braised_pork.jpg" alt="Dish" class="menu-img" onerror="this.style.opacity='0';">
                     <div class="menu-details">
                         <span class="print-qty" id="p-qty-8"></span>
@@ -440,7 +606,7 @@
                     </div>
                 </div>
 
-                <div class="menu-item category-dishes" id="item-9" style="display: flex;">
+                <div class="menu-item category-dishes" id="item-9">
                     <img src="graphics/dish/mapo_tofu.jpg" alt="Dish" class="menu-img" onerror="this.style.opacity='0';">
                     <div class="menu-details">
                         <span class="print-qty" id="p-qty-9"></span>
@@ -553,14 +719,19 @@
 
             </div>
 
-            <button class="btn-order" onclick="printReceipt()" id="order-btn">Hit Order & Print Menu</button>
+            <button class="btn-order" onclick="submitOrder()" id="order-btn">Submit Order</button>
         </div>
     </div>
 
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/supabase.min.js"></script>
     <script>
         function enterSite() {
             document.getElementById('welcome-screen').classList.add('hidden-screen');
         }
+
+        const SUPABASE_URL = 'https://vmongicasctytfmnorui.supabase.co/rest/v1/boochoo meal data';
+        const SUPABASE_ANON_KEY = 'sb_publishable_wfE5iimxJBnDZ91JCwLJVQ_NvOUYqTk';
+        let supabaseClient = null;
 
         let currentLang = 'zh';
         let currentCategory = 'dishes';
@@ -577,7 +748,7 @@
             // Dynamically show items matching category
             document.querySelectorAll('.menu-item').forEach(item => {
                 if (item.classList.contains(`category-${categoryName}`)) {
-                    item.style.display = 'flex';
+                    item.style.display = 'grid';
                 } else {
                     item.style.display = 'none';
                 }
@@ -689,6 +860,92 @@
             alert(currentLang === 'en' ? "Order submitted successfully!" : "订单已成功提交！");
         }
 
+        function getItemOption(itemElement) {
+            const activeOption = itemElement.querySelector('.option-btn.active');
+            return activeOption ? activeOption.textContent.trim() : '';
+        }
+
+        function collectOrderData() {
+            const orderItems = [];
+            document.querySelectorAll('.menu-item').forEach(item => {
+                const itemId = Number(item.id.replace('item-', ''));
+                const quantity = itemQuantities[itemId] || 0;
+                if (quantity > 0) {
+                    const name = item.querySelector('.item-name')?.textContent || '';
+                    const option = getItemOption(item);
+                    orderItems.push({ id: itemId, name, quantity, option });
+                }
+            });
+            return orderItems;
+        }
+
+        async function submitOrder() {
+            const nameRow = document.getElementById('order-name-row');
+            const nameInput = document.getElementById('orderer-name');
+            const statusNode = document.getElementById('order-status');
+            const orderItems = collectOrderData();
+
+            if (!orderItems.length) {
+                statusNode.textContent = currentLang === 'en' ? 'Select at least one item before submitting.' : '请先选择至少一件商品。';
+                statusNode.style.color = '#d32f2f';
+                return;
+            }
+
+            if (nameRow.classList.contains('hidden-element')) {
+                nameRow.classList.remove('hidden-element');
+                statusNode.textContent = currentLang === 'en' ? 'Enter your name and press Submit Order again.' : '请输入您的姓名，然后再次按提交订单。';
+                statusNode.style.color = '#5c4033';
+                nameInput.focus();
+                return;
+            }
+
+            if (!nameInput.value.trim()) {
+                statusNode.textContent = currentLang === 'en' ? 'Please enter your name before submitting.' : '请在提交前输入您的姓名。';
+                statusNode.style.color = '#d32f2f';
+                nameInput.focus();
+                return;
+            }
+
+            if (SUPABASE_URL.includes('your-project') || SUPABASE_ANON_KEY.includes('your-anon-key')) {
+                statusNode.textContent = currentLang === 'en' ? 'Replace Supabase config with your project values.' : '请将 Supabase 配置替换为您的项目值。';
+                statusNode.style.color = '#d32f2f';
+                return;
+            }
+
+            statusNode.textContent = currentLang === 'en' ? 'Submitting order...' : '正在提交订单...';
+            statusNode.style.color = '#5c4033';
+
+            if (!supabaseClient) {
+                if (typeof supabase === 'undefined' || !supabase.createClient) {
+                    statusNode.textContent = currentLang === 'en' ? 'Unable to load Supabase client.' : '无法加载 Supabase 客户端。';
+                    statusNode.style.color = '#d32f2f';
+                    return;
+                }
+                supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+            }
+
+            const orderPayload = {
+                name: nameInput.value.trim(),
+                order_data: orderItems,
+                created_at: new Date().toISOString()
+            };
+
+            const { error } = await supabaseClient
+                .from('orders')
+                .insert([orderPayload]);
+
+            if (error) {
+                statusNode.textContent = currentLang === 'en' ? `Order failed: ${error.message}` : `订单失败: ${error.message}`;
+                statusNode.style.color = '#d32f2f';
+                return;
+            }
+
+            statusNode.textContent = currentLang === 'en' ? 'Order submitted successfully!' : '订单提交成功！';
+            statusNode.style.color = '#2e7d32';
+            nameInput.value = '';
+            document.getElementById('order-btn').blur();
+        }
+
         function initializeLanguage() {
             document.getElementById('lang-toggle').innerText = 'English';
             document.getElementById('order-btn').innerText = '确认订单并打印菜单';
@@ -711,7 +968,13 @@
             });
         }
 
-        document.addEventListener('DOMContentLoaded', initializeLanguage);
+        document.addEventListener('DOMContentLoaded', function () {
+            initializeLanguage();
+            const activeTab = document.querySelector('.tab-btn.active-tab');
+            if (activeTab) {
+                switchCategory(currentCategory, activeTab);
+            }
+        });
     </script>
 </body>
 </html>
