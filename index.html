@@ -246,37 +246,44 @@
         .cart-toggle-btn {
             display: none;
             align-items: center;
-            gap: 8px;
-            border: 3px solid #ffe6cc;
-            border-radius: 18px;
-            padding: 8px 10px;
-            background: #fffdfa;
+            gap: 10px;
+            border: 3px solid #ffcc99;
+            border-radius: 999px;
+            padding: 10px 16px;
+            background: linear-gradient(135deg, #fff7ed 0%, #ffe3c2 100%);
             cursor: pointer;
-            font-weight: 700;
+            font-weight: 800;
             color: #5c4033;
-            transition: transform 0.1s ease, box-shadow 0.1s ease;
+            box-shadow: 0 6px 0 #f5dec6;
+            transition: transform 0.12s ease, box-shadow 0.12s ease;
+            min-height: 48px;
         }
         .cart-toggle-btn:hover {
-            transform: translateY(-1px);
-            box-shadow: 0 4px 0 #f5dec6;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 0 #f5dec6;
         }
         .cart-toggle-btn img {
-            width: 26px;
-            height: 26px;
+            width: 30px;
+            height: 30px;
             object-fit: contain;
+        }
+        .cart-label {
+            font-size: 0.95rem;
+            letter-spacing: 0.02em;
         }
         .cart-count {
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            min-width: 24px;
-            height: 24px;
+            min-width: 26px;
+            height: 26px;
             border-radius: 999px;
             background: #ff751a;
             color: white;
-            font-size: 0.85rem;
+            font-size: 0.9rem;
             font-weight: 900;
-            padding: 0 6px;
+            padding: 0 7px;
+            box-shadow: 0 2px 0 #cc5200;
         }
 
         .cart-overlay {
@@ -972,6 +979,7 @@
                 <div class="header-actions">
                     <button class="cart-toggle-btn" onclick="toggleCart()" id="cart-toggle-btn" aria-label="Open cart" style="display: none;">
                         <img src="graphics/cart.jpg" alt="Cart" />
+                        <span class="cart-label" id="cart-label">购物车</span>
                         <span class="cart-count" id="cart-count">0</span>
                     </button>
                     <button class="lang-btn" onclick="toggleLanguage()" id="lang-toggle">中文</button>
@@ -1340,7 +1348,7 @@
                     <div class="soldout-overlay"><img src="graphics/unavailable.png" alt="Unavailable" /></div>
                     <div class="menu-details">
                         <span class="print-qty" id="p-qty-24"></span>
-                        <h3 class="item-name" data-en="Soju" data-zh="soju">soju</h3>
+                        <h3 class="item-name" data-en="Soju" data-zh="韩国烧酒">韩国烧酒</h3>
                         <p class="item-desc" data-en="Clean and smooth Korean soju" data-zh="清爽顺口的韩国烧酒">清爽顺口的韩国烧酒</p>
                     </div>
                     <div class="controls">
@@ -1385,7 +1393,7 @@
                     <div class="soldout-overlay"><img src="graphics/unavailable.png" alt="Unavailable" /></div>
                     <div class="menu-details">
                         <span class="print-qty" id="p-qty-27"></span>
-                        <h3 class="item-name" data-en="Margarita" data-zh="margarita">margarita</h3>
+                        <h3 class="item-name" data-en="Margarita" data-zh="玛格丽塔">玛格丽塔</h3>
                         <p class="item-desc" data-en="Classic margarita with lime and tequila" data-zh="经典青柠龙舌兰鸡尾酒">经典青柠龙舌兰鸡尾酒</p>
                     </div>
                     <div class="controls">
@@ -1400,7 +1408,7 @@
                     <div class="soldout-overlay"><img src="graphics/unavailable.png" alt="Unavailable" /></div>
                     <div class="menu-details">
                         <span class="print-qty" id="p-qty-28"></span>
-                        <h3 class="item-name" data-en="Pina Colada" data-zh="pina colada">pina colada</h3>
+                        <h3 class="item-name" data-en="Pina Colada" data-zh="椰林飘香">椰林飘香</h3>
                         <p class="item-desc" data-en="Creamy tropical cocktail with pineapple and coconut" data-zh="香甜热带风味鸡尾酒">香甜热带风味鸡尾酒</p>
                     </div>
                     <div class="controls">
@@ -1696,6 +1704,7 @@
             statusNode.textContent = currentLang === 'en' ? 'Added to cart.' : '已添加到购物车。';
             statusNode.style.color = '#2e7d32';
             updateCartDisplay();
+            closeItemDetail();
         }
 
         function toggleCart() {
@@ -1758,6 +1767,10 @@
             document.getElementById('lang-toggle').innerText = currentLang === 'en' ? '中文' : 'English';
             document.getElementById('order-btn').innerText = currentLang === 'en' ? 'Hit Order & Print Menu' : '确认订单并打印菜单';
             document.getElementById('sidebar-title').innerText = currentLang === 'en' ? 'CATEGORIES' : '菜单分类';
+            const cartLabel = document.getElementById('cart-label');
+            if (cartLabel) {
+                cartLabel.innerText = currentLang === 'en' ? 'Cart' : '购物车';
+            }
             
             updateHeaderTitle();
 
@@ -1954,6 +1967,10 @@
             const cartSummary = document.getElementById('cart-summary');
             if (cartSummary && !cartItems.length) {
                 cartSummary.textContent = '购物车中尚无商品。';
+            }
+            const cartLabel = document.getElementById('cart-label');
+            if (cartLabel) {
+                cartLabel.innerText = '购物车';
             }
         }
 
