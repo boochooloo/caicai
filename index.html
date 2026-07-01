@@ -11,13 +11,20 @@
             margin: 0;
             padding: 0;
         }
+        html, body {
+            height: 100%;
+            min-height: 100%;
+        }
+
         body {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            background: #fff2e6 url('graphics/menu_background.jpg') no-repeat center center fixed;
+            background: #fff2e6 url('graphics/menu_background.jpg') no-repeat center center;
             background-size: cover;
+            background-attachment: scroll;
             color: #5c4033;
             overflow-x: hidden;
-            height: 100vh;
+            overflow-y: auto;
+            min-height: 100vh;
         }
 
         /* --- 1. WELCOME GREETING SCREEN --- */
@@ -38,8 +45,8 @@
 
         .portal-wrapper {
             position: relative;
-            width: 340px;
-            height: 200px;
+            width: min(420px, 90vw);
+            height: auto;
             margin-top: 100px;
             display: flex;
             justify-content: center;
@@ -51,8 +58,9 @@
             background-size: contain;
             border: none;
             cursor: pointer;
-            width: 750px;
-            height: 375px;
+            width: min(900px, 90vw);
+            height: auto;
+            aspect-ratio: 2.5 / 1;
             margin-top: 20px;
             transition: transform 0.1s ease;
             animation: cuteBounce 2.5s infinite ease-in-out;
@@ -90,21 +98,26 @@
 
         /* --- 2. MAIN MENU LAYOUT WITH SIDEBAR --- */
         .app-layout {
-            display: flex;
-            max-width: 900px;
+            display: grid;
+            grid-template-columns: 260px minmax(0, 1fr);
+            align-items: stretch;
+            max-width: 1300px;
+            width: min(98vw, 1300px);
+            min-height: calc(100vh - 40px);
             height: calc(100vh - 40px);
             margin: 20px auto;
             gap: 20px;
             padding: 0 15px;
+            overflow: hidden;
         }
 
         /* Left Side Bar Container */
         .sidebar {
-            width: 220px;
+            min-height: 100%;
             background: rgba(255, 253, 250, 0.95);
             border: 5px solid #ffcc99;
             border-radius: 28px;
-            padding: 20px 12px;
+            padding: 20px 14px;
             display: flex;
             flex-direction: column;
             gap: 15px;
@@ -154,7 +167,9 @@
 
         /* Right Side Content Container */
         .menu-main-content {
-            flex: 1;
+            min-width: 0;
+            min-height: 0;
+            max-height: 100%;
             background: rgba(255, 253, 250, 0.95);
             border: 5px solid #ffcc99;
             border-radius: 28px;
@@ -186,42 +201,498 @@
         }
         .lang-btn:active { transform: translateY(2px); box-shadow: 0 1px 0 #cc5200; }
 
+        .order-form {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 18px;
+        }
+        .order-form label {
+            font-weight: 700;
+            color: #5c4033;
+            min-width: 100px;
+        }
+        .order-form input {
+            flex: 1 1 260px;
+            padding: 12px 14px;
+            border: 2px solid #ffe6cc;
+            border-radius: 18px;
+            background: #fffdfa;
+            color: #5c4033;
+            font-size: 1rem;
+        }
+        .order-status {
+            width: 100%;
+            min-height: 1.5rem;
+            color: #5c4033;
+            font-size: 0.95rem;
+            margin-top: 4px;
+        }
+        .hidden-element {
+            display: none !important;
+            visibility: hidden !important;
+            opacity: 0 !important;
+            pointer-events: none !important;
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .cart-toggle-btn {
+            display: none;
+            align-items: center;
+            gap: 8px;
+            border: 3px solid #ffe6cc;
+            border-radius: 18px;
+            padding: 8px 10px;
+            background: #fffdfa;
+            cursor: pointer;
+            font-weight: 700;
+            color: #5c4033;
+            transition: transform 0.1s ease, box-shadow 0.1s ease;
+        }
+        .cart-toggle-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 0 #f5dec6;
+        }
+        .cart-toggle-btn img {
+            width: 26px;
+            height: 26px;
+            object-fit: contain;
+        }
+        .cart-count {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 24px;
+            height: 24px;
+            border-radius: 999px;
+            background: #ff751a;
+            color: white;
+            font-size: 0.85rem;
+            font-weight: 900;
+            padding: 0 6px;
+        }
+
+        .cart-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.45);
+            display: flex;
+            justify-content: flex-end;
+            padding: 24px;
+            z-index: 10000;
+            pointer-events: none;
+        }
+        .cart-overlay:not(.hidden-element) {
+            pointer-events: auto;
+        }
+        .cart-panel-overlay {
+            width: min(420px, 96vw);
+            max-height: 90vh;
+            background: #fffdfa;
+            border: 3px solid #ffe6cc;
+            border-radius: 28px;
+            padding: 22px 20px 18px;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 18px 40px rgba(0,0,0,0.15);
+            position: relative;
+        }
+        .cart-close-btn {
+            position: absolute;
+            top: 14px;
+            right: 14px;
+            width: 34px;
+            height: 34px;
+            border: none;
+            border-radius: 999px;
+            background: #ff944d;
+            color: white;
+            font-size: 1.2rem;
+            line-height: 1;
+            cursor: pointer;
+            box-shadow: 0 2px 0 #cc5200;
+        }
+        .cart-panel-header {
+            font-size: 1.2rem;
+            font-weight: 900;
+            color: #ff751a;
+            margin-bottom: 10px;
+        }
+        .cart-summary {
+            color: #8c6653;
+            margin-bottom: 10px;
+            font-size: 0.95rem;
+        }
+        .cart-items {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            overflow-y: auto;
+            padding-right: 4px;
+            margin-bottom: 12px;
+        }
+        .cart-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            gap: 10px;
+            padding: 12px 12px;
+            border: 2px solid #ffebd8;
+            border-radius: 16px;
+            background: #fff7ed;
+        }
+        .cart-item-label {
+            min-width: 0;
+            flex: 1;
+        }
+        .cart-item-label strong {
+            display: block;
+            color: #5c4033;
+            font-size: 1rem;
+            margin-bottom: 4px;
+        }
+        .cart-item-meta {
+            color: #8c6653;
+            font-size: 0.9rem;
+        }
+        .cart-item-actions {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+            margin-top: 4px;
+        }
+        .btn-clear,
+        .btn-remove,
+        .btn-add-cart {
+            background: #ff944d;
+            color: white;
+            border: none;
+            border-radius: 14px;
+            padding: 8px 12px;
+            cursor: pointer;
+            font-weight: 700;
+            font-size: 0.85rem;
+            transition: transform 0.1s ease;
+        }
+        .btn-clear:hover,
+        .btn-remove:hover,
+        .btn-add-cart:hover {
+            transform: translateY(-1px);
+        }
+        .btn-remove {
+            background: #f0625d;
+        }
+        .cart-actions {
+            display: flex;
+            justify-content: flex-end;
+        }
+
+        @supports (max-height: 90vh) {
+            .cart-items {
+                max-height: calc(90vh - 190px);
+            }
+        }
+
         /* Window list container scrollable */
         .items-scroll-area {
-            flex: 1;
+            display: grid;
+            grid-template-columns: repeat(2, minmax(320px, 1fr));
+            gap: 20px;
+            flex: 1 1 auto;
+            min-height: 0;
             overflow-y: auto;
-            padding-right: 5px;
+            overflow-x: hidden;
+            padding-right: 6px;
+            padding-bottom: 12px;
         }
 
         /* Menu Card Items */
         .menu-item {
             display: none; /* Controlled dynamically via JS active filter tabs */
-            gap: 15px;
-            margin-bottom: 20px;
-            padding: 14px;
+            grid-template-columns: minmax(180px, 220px) minmax(0, 1fr);
+            grid-template-areas: "image details" "image details";
+            gap: 20px 22px;
+            padding: 22px 24px;
             background: #ffffff;
             border: 3px solid #ffe6cc;
             border-radius: 20px;
-            align-items: center;
+            align-items: start;
             box-shadow: 0 5px 0 #f5dec6;
+            display: grid;
+            height: 240px;
+            min-height: 240px;
+            max-height: 240px;
+            box-sizing: border-box;
+            cursor: pointer;
+            transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease;
+        }
+
+        .menu-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 0 #f5dec6;
+            border-color: #ffd9b3;
+        }
+
+        .menu-item.expanded {
+            border-color: #ffb366;
+            box-shadow: 0 8px 0 #f1d0aa;
+            grid-template-areas: "image details" "image controls";
+        }
+
+        .menu-item.expanded .menu-img {
+            border-color: #ff944d;
         }
 
         .menu-img {
-            width: 130px; height: 130px;
-            background-color: #fff2e6;
+            grid-area: image;
+            width: min(100%, 180px);
+            max-width: 180px;
+            height: 180px;
+            aspect-ratio: 1 / 1;
+            background-color: transparent;
             border-radius: 14px;
             object-fit: cover;
-            border: 2px solid #ffcc99;
+            border: none;
+            box-shadow: none;
+            align-self: center;
         }
 
-        .menu-details { flex: 1; }
-        .menu-details h3 { font-size: 1.15rem; color: #5c4033; margin-bottom: 4px; }
-        .menu-details p { font-size: 0.9rem; color: #8c6653; line-height: 1.3; }
+        .menu-details {
+            grid-area: details;
+            min-width: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            height: 100%;
+            justify-content: flex-start;
+        }
+
+        .menu-details::after {
+            content: "Tap to view options";
+            display: inline-flex;
+            align-items: center;
+            width: fit-content;
+            margin-top: auto;
+            padding: 6px 10px;
+            border-radius: 999px;
+            background: #fff8f0;
+            border: 1px dashed #ffd9b3;
+            color: #b97a4f;
+            font-size: 0.82rem;
+            font-weight: 700;
+        }
+
+        .menu-item.expanded .menu-details::after {
+            display: none;
+        }
+
+        .controls {
+            grid-area: controls;
+            display: none;
+            align-items: center;
+            gap: 10px;
+            background: #fff2e6;
+            padding: 6px 10px;
+            border-radius: 20px;
+            border: 2px solid #ffd9b3;
+            justify-self: start;
+            align-self: end;
+            margin-top: 6px;
+            width: fit-content;
+            min-height: 44px;
+        }
+
+        .menu-item.expanded .controls {
+            display: flex;
+        }
+
+        .item-detail-overlay {
+            position: fixed;
+            inset: 0;
+            z-index: 1200;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 24px;
+            background: rgba(70, 34, 12, 0.72);
+            backdrop-filter: blur(4px);
+        }
+
+        .item-detail-overlay.hidden-element {
+            display: none;
+        }
+
+        .item-detail-panel {
+            position: relative;
+            width: min(520px, 100%);
+            max-height: 90vh;
+            overflow: auto;
+            background: #fffaf5;
+            border: 3px solid #ffe6cc;
+            border-radius: 24px;
+            box-shadow: 0 18px 48px rgba(0,0,0,0.24);
+            padding: 22px 20px 24px;
+        }
+
+        .item-detail-close {
+            position: absolute;
+            top: 14px;
+            right: 14px;
+            width: 40px;
+            height: 40px;
+            border: none;
+            border-radius: 50%;
+            background: #fff2e6;
+            color: #a35a24;
+            font-size: 1.4rem;
+            cursor: pointer;
+        }
+
+        .item-detail-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .item-detail-image {
+            width: min(240px, 100%);
+            height: 240px;
+            aspect-ratio: 1 / 1;
+            object-fit: cover;
+            border-radius: 16px;
+            border: none;
+            background: transparent;
+            box-shadow: none;
+        }
+
+        .item-detail-info {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+            width: 100%;
+            text-align: center;
+        }
+
+        .item-detail-info h3 {
+            font-size: 1.22rem;
+            color: #5c4033;
+            margin: 0;
+        }
+
+        .item-detail-info p {
+            margin: 0;
+            color: #8c6653;
+            line-height: 1.45;
+            font-size: 0.96rem;
+        }
+
+        .item-detail-controls {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            background: #fff2e6;
+            padding: 8px 12px;
+            border-radius: 20px;
+            border: 2px solid #ffd9b3;
+            width: fit-content;
+            margin-top: 4px;
+        }
+
+        .item-detail-panel .option-toggle {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 8px;
+            padding: 8px 10px;
+            background: #fff8f0;
+            border: 1px dashed #ffd9b3;
+            border-radius: 14px;
+            width: fit-content;
+            margin: 0 auto;
+        }
+
+        .menu-details h3 {
+            font-size: 1.18rem;
+            color: #5c4033;
+            margin: 0 0 6px;
+            min-height: 2.8rem;
+            display: -webkit-box;
+            line-clamp: 2;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+        .menu-details p {
+            font-size: 0.95rem;
+            color: #8c6653;
+            line-height: 1.4;
+            margin: 0;
+            min-height: 2.8rem;
+            display: -webkit-box;
+            line-clamp: 2;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .menu-item.unavailable {
+            position: relative;
+            overflow: hidden;
+            cursor: default;
+        }
+
+        .menu-item.unavailable .menu-img {
+            filter: grayscale(0.7) saturate(0.65);
+        }
+
+        .soldout-overlay {
+            position: absolute;
+            inset: 0;
+            z-index: 3;
+            pointer-events: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(0, 0, 0, 0.16);
+            padding: 12px;
+        }
+
+        .soldout-overlay img {
+            width: min(220px, 82%);
+            max-width: 100%;
+            display: block;
+            border-radius: 22px;
+            box-shadow: 0 12px 28px rgba(0,0,0,0.24);
+        }
+
+        .menu-item.unavailable .controls,
+        .menu-item.unavailable .controls .btn-qty,
+        .menu-item.unavailable .controls .btn-add-cart {
+            display: none !important;
+        }
 
         /* Quantity controls */
         .controls {
-            display: flex; align-items: center; gap: 10px;
-            background: #fff2e6; padding: 4px 10px; border-radius: 20px; border: 2px solid #ffd9b3;
+            align-items: center;
+            gap: 10px;
+            background: #fff2e6;
+            padding: 6px 10px;
+            border-radius: 20px;
+            border: 2px solid #ffd9b3;
+            justify-self: start;
+            align-self: end;
+            margin-top: 6px;
+            width: fit-content;
         }
         .btn-qty {
             background: #ffffff; border: 2px solid #ffb366; color: #ff751a;
@@ -235,7 +706,7 @@
         .btn-order {
             background: linear-gradient(to bottom, #9ccc65, #7cb342);
             color: white; border: 3px solid white; padding: 14px;
-            font-size: 1.3rem; font-radius: 20px; border-radius: 20px;
+            font-size: 1.3rem; border-radius: 20px;
             cursor: pointer; font-weight: 900; font-family: 'Arial Black', sans-serif;
             width: 100%; box-shadow: 0 6px 0 #4f7328; text-shadow: 1px 1px 0 rgba(0,0,0,0.15);
             margin-top: 15px;
@@ -244,13 +715,34 @@
 
         /* Milk option toggle */
         .option-toggle {
-            display: flex; gap: 8px;
+            display: none;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 0;
+            padding: 8px 10px;
+            background: #fff8f0;
+            border: 1px dashed #ffd9b3;
+            border-radius: 14px;
+            width: fit-content;
+            min-height: 44px;
+            align-items: center;
+        }
+        .menu-item.expanded .option-toggle {
+            display: flex;
+        }
+        .option-toggle + .option-toggle {
+            margin-top: 2px;
         }
         .option-btn {
             background: #ffffff; border: 2px solid #ffcc99; color: #8c6653;
             padding: 6px 12px; border-radius: 12px; cursor: pointer;
             font-size: 0.9rem; font-weight: bold;
             transition: all 0.2s ease;
+            min-height: 36px;
+            min-width: 74px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
         }
         .option-btn:hover { background: #fff2e6; }
         .option-btn.active {
@@ -274,6 +766,160 @@
             .print-qty { display: inline-block !important; font-weight: bold; margin-right: 15px; font-size: 1.3rem; }
         }
         .print-header, .print-qty { display: none; }
+
+        @media (max-width: 900px) {
+            .app-layout {
+                display: flex;
+                flex-direction: column;
+                gap: 16px;
+                height: auto;
+                margin: 15px 10px 15px;
+            }
+
+            .sidebar {
+                width: 100%;
+                min-height: 0;
+                height: auto;
+            }
+
+            .menu-main-content {
+                width: 100%;
+                height: auto;
+                max-height: none;
+                padding: 18px;
+            }
+
+            .order-form {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .order-form label,
+            .order-form input {
+                width: 100%;
+            }
+
+            .items-scroll-area {
+                grid-template-columns: 1fr;
+                padding-right: 0;
+                max-height: none;
+            }
+
+            .menu-item {
+                grid-template-columns: 1fr;
+                align-items: stretch;
+                gap: 18px;
+                padding: 20px;
+            }
+
+            .menu-img {
+                width: 100%;
+                height: auto;
+                min-height: 180px;
+                border-radius: 18px;
+            }
+
+            .menu-details {
+                padding-top: 12px;
+            }
+
+            .controls {
+                width: 100%;
+                justify-content: space-between;
+                flex-wrap: wrap;
+            }
+        }
+
+        @media (max-width: 600px) {
+            body {
+                background-position: center top;
+            }
+
+            .sidebar {
+                padding: 14px 10px;
+                border-radius: 22px;
+            }
+
+            .tab-btn {
+                font-size: 0.98rem;
+                padding: 10px 10px;
+                border-radius: 16px;
+            }
+
+            header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+            }
+
+            header h2 {
+                font-size: 1.3rem;
+            }
+
+            .lang-btn,
+            .btn-order {
+                font-size: 0.98rem;
+            }
+
+            .order-status {
+                font-size: 0.95rem;
+            }
+
+            .menu-details h3 {
+                font-size: 1rem;
+            }
+
+            .menu-details p {
+                font-size: 0.87rem;
+            }
+
+            .controls {
+                gap: 8px;
+            }
+
+            .btn-qty {
+                width: 30px;
+                height: 30px;
+            }
+
+            .option-btn {
+                padding: 6px 10px;
+                font-size: 0.85rem;
+            }
+        }
+
+        @media (max-width: 450px) {
+            .app-layout {
+                margin: 12px 8px 12px;
+            }
+
+            .sidebar {
+                border-radius: 18px;
+                padding: 12px 10px;
+            }
+
+            .tab-btn {
+                font-size: 0.92rem;
+                padding: 10px 8px;
+            }
+
+            .menu-main-content {
+                padding: 16px;
+            }
+
+            .lang-btn,
+            .btn-order {
+                width: 100%;
+            }
+
+            .menu-item {
+                padding: 16px;
+            }
+
+            .menu-details h3 {
+                font-size: 0.98rem;
+            }
+        }
     </style>
 </head>
 <body>
@@ -323,12 +969,26 @@
 
             <header>
                 <h2 id="main-title">Dishes Menu</h2>
-                <button class="lang-btn" onclick="toggleLanguage()" id="lang-toggle">中文</button>
+                <div class="header-actions">
+                    <button class="cart-toggle-btn" onclick="toggleCart()" id="cart-toggle-btn" aria-label="Open cart" style="display: none;">
+                        <img src="graphics/cart.jpg" alt="Cart" />
+                        <span class="cart-count" id="cart-count">0</span>
+                    </button>
+                    <button class="lang-btn" onclick="toggleLanguage()" id="lang-toggle">中文</button>
+                </div>
             </header>
+
+            <div class="order-form">
+                <div class="order-name-row hidden-element" id="order-name-row">
+                    <label for="orderer-name">Your name:</label>
+                    <input id="orderer-name" type="text" placeholder="Enter your name" autocomplete="name" />
+                </div>
+                <div class="order-status" id="order-status">Add items first, then press Submit Order to enter your name.</div>
+            </div>
 
             <div class="items-scroll-area" id="menu-items-wrapper">
                 
-                <div class="menu-item category-dishes" id="item-1" style="display: flex;">
+                <div class="menu-item category-dishes" id="item-1">
                     <img src="graphics/dish/tomato_beef.jpg" alt="Dish" class="menu-img" onerror="this.style.opacity='0';">
                     <div class="menu-details">
                         <span class="print-qty" id="p-qty-1"></span>
@@ -342,7 +1002,7 @@
                     </div>
                 </div>
 
-                <div class="menu-item category-dishes" id="item-2" style="display: flex;">
+                <div class="menu-item category-dishes" id="item-2">
                     <img src="graphics/dish/veggies.jpg" alt="Dish" class="menu-img" onerror="this.style.opacity='0';">
                     <div class="menu-details">
                         <span class="print-qty" id="p-qty-2"></span>
@@ -356,7 +1016,7 @@
                     </div>
                 </div>
 
-                <div class="menu-item category-dishes" id="item-3" style="display: flex;">
+                <div class="menu-item category-dishes" id="item-3">
                     <img src="graphics/dish/seared_chickenWing.jpg" alt="Dish" class="menu-img" onerror="this.style.opacity='0';">
                     <div class="menu-details">
                         <span class="print-qty" id="p-qty-3"></span>
@@ -370,7 +1030,7 @@
                     </div>
                 </div>
 
-                <div class="menu-item category-dishes" id="item-4" style="display: flex;">
+                <div class="menu-item category-dishes" id="item-4">
                     <img src="graphics/dish/coke_chicken.jpg" alt="Dish" class="menu-img" onerror="this.style.opacity='0';">
                     <div class="menu-details">
                         <span class="print-qty" id="p-qty-4"></span>
@@ -384,7 +1044,7 @@
                     </div>
                 </div>
 
-                <div class="menu-item category-dishes" id="item-5" style="display: flex;">
+                <div class="menu-item category-dishes" id="item-5">
                     <img src="graphics/dish/torn_chicken.jpg" alt="Dish" class="menu-img" onerror="this.style.opacity='0';">
                     <div class="menu-details">
                         <span class="print-qty" id="p-qty-5"></span>
@@ -398,7 +1058,7 @@
                     </div>
                 </div>
 
-                <div class="menu-item category-dishes" id="item-6" style="display: flex;">
+                <div class="menu-item category-dishes" id="item-6">
                     <img src="graphics/dish/lemon_salmon.jpg" alt="Dish" class="menu-img" onerror="this.style.opacity='0';">
                     <div class="menu-details">
                         <span class="print-qty" id="p-qty-6"></span>
@@ -412,7 +1072,7 @@
                     </div>
                 </div>
 
-                <div class="menu-item category-dishes" id="item-7" style="display: flex;">
+                <div class="menu-item category-dishes" id="item-7">
                     <img src="graphics/dish/pork_watercress.jpg" alt="Dish" class="menu-img" onerror="this.style.opacity='0';">
                     <div class="menu-details">
                         <span class="print-qty" id="p-qty-7"></span>
@@ -426,7 +1086,7 @@
                     </div>
                 </div>
 
-                <div class="menu-item category-dishes" id="item-8" style="display: flex;">
+                <div class="menu-item category-dishes" id="item-8">
                     <img src="graphics/dish/braised_pork.jpg" alt="Dish" class="menu-img" onerror="this.style.opacity='0';">
                     <div class="menu-details">
                         <span class="print-qty" id="p-qty-8"></span>
@@ -440,7 +1100,7 @@
                     </div>
                 </div>
 
-                <div class="menu-item category-dishes" id="item-9" style="display: flex;">
+                <div class="menu-item category-dishes" id="item-9">
                     <img src="graphics/dish/mapo_tofu.jpg" alt="Dish" class="menu-img" onerror="this.style.opacity='0';">
                     <div class="menu-details">
                         <span class="print-qty" id="p-qty-9"></span>
@@ -488,7 +1148,7 @@
                         <span class="print-qty" id="p-qty-12"></span>
                         <h3 class="item-name" data-en="Water" data-zh="水">Water</h3>
                         <p class="item-desc" data-en="Fresh bottled water" data-zh="新鲜矿泉水">Fresh bottled water</p>
-                        <div class="option-toggle" style="margin-top: 8px;">
+                        <div class="option-toggle">
                             <button class="option-btn active" onclick="toggleWaterOption(this, 'roomtemp')" data-en="Room Temp" data-zh="常温">常温</button>
                             <button class="option-btn" onclick="toggleWaterOption(this, 'ice')" data-en="Ice" data-zh="冰">冰</button>
                             <button class="option-btn" onclick="toggleWaterOption(this, 'hot')" data-en="Hot" data-zh="热">热</button>
@@ -507,7 +1167,7 @@
                         <span class="print-qty" id="p-qty-13"></span>
                         <h3 class="item-name" data-en="Cola" data-zh="可乐">Cola</h3>
                         <p class="item-desc" data-en="Refreshing cola" data-zh="爽口可乐">Refreshing cola</p>
-                        <div class="option-toggle" style="margin-top: 8px;">
+                        <div class="option-toggle">
                             <button class="option-btn active" onclick="toggleColaOption(this, 'regular')" data-en="Regular" data-zh="常规">常规</button>
                             <button class="option-btn" onclick="toggleColaOption(this, 'diet')" data-en="Diet" data-zh="无糖">无糖</button>
                         </div>
@@ -539,7 +1199,7 @@
                         <span class="print-qty" id="p-qty-15"></span>
                         <h3 class="item-name" data-en="Black Sugar Tapioca Milk" data-zh="黑糖啵啵鲜奶">Black Sugar Tapioca Milk</h3>
                         <p class="item-desc" data-en="Creamy milk with chewy tapioca pearls and brown sugar" data-zh="奶香浓郁配上Q弹珍珠和黑糖">Creamy milk with chewy tapioca pearls and brown sugar</p>
-                        <div class="option-toggle" style="margin-top: 8px;">
+                        <div class="option-toggle">
                             <button class="option-btn active" onclick="toggleMilkOption(this, 'regular')" data-en="Regular Milk" data-zh="牛奶">牛奶</button>
                             <button class="option-btn" onclick="toggleMilkOption(this, 'oat')" data-en="Oat Milk" data-zh="燕麦奶">燕麦奶</button>
                         </div>
@@ -551,20 +1211,514 @@
                     </div>
                 </div>
 
+                <div class="menu-item category-beverages" id="item-16">
+                    <img src="graphics/drink/coke.jpg" alt="Beverage" class="menu-img" onerror="this.style.opacity='0';">
+                    <div class="menu-details">
+                        <span class="print-qty" id="p-qty-16"></span>
+                        <h3 class="item-name" data-en="Lemon Tea" data-zh="柠檬茶">柠檬茶</h3>
+                        <p class="item-desc" data-en="Refreshing lemon tea with a bright citrus aroma" data-zh="清爽柠檬香气的茶饮">清爽柠檬香气的茶饮</p>
+                    </div>
+                    <div class="controls">
+                        <button class="btn-qty" onclick="changeQty(16, -1)">-</button>
+                        <span class="qty-num" id="qty-16">0</span>
+                        <button class="btn-qty" onclick="changeQty(16, 1)">+</button>
+                    </div>
+                </div>
+
+                <div class="menu-item category-beverages" id="item-17">
+                    <img src="graphics/drink/sprite.jpg" alt="Beverage" class="menu-img" onerror="this.style.opacity='0';">
+                    <div class="menu-details">
+                        <span class="print-qty" id="p-qty-17"></span>
+                        <h3 class="item-name" data-en="Lemon Water" data-zh="柠檬水">柠檬水</h3>
+                        <p class="item-desc" data-en="Fresh lemon water with a clean citrus finish" data-zh="清爽自然的柠檬水">清爽自然的柠檬水</p>
+                    </div>
+                    <div class="controls">
+                        <button class="btn-qty" onclick="changeQty(17, -1)">-</button>
+                        <span class="qty-num" id="qty-17">0</span>
+                        <button class="btn-qty" onclick="changeQty(17, 1)">+</button>
+                    </div>
+                </div>
+
+                <div class="menu-item category-beverages" id="item-18">
+                    <img src="graphics/drink/black_sugar_tapioca_milk.jpg" alt="Beverage" class="menu-img" onerror="this.style.opacity='0';">
+                    <div class="menu-details">
+                        <span class="print-qty" id="p-qty-18"></span>
+                        <h3 class="item-name" data-en="Matcha Latte" data-zh="抹茶拿铁">抹茶拿铁</h3>
+                        <p class="item-desc" data-en="Creamy matcha latte with a smooth green tea flavor" data-zh="香滑顺口的抹茶拿铁">香滑顺口的抹茶拿铁</p>
+                    </div>
+                    <div class="controls">
+                        <button class="btn-qty" onclick="changeQty(18, -1)">-</button>
+                        <span class="qty-num" id="qty-18">0</span>
+                        <button class="btn-qty" onclick="changeQty(18, 1)">+</button>
+                    </div>
+                </div>
+
+                <div class="menu-item category-beverages" id="item-19">
+                    <img src="graphics/drink/water.jpg" alt="Beverage" class="menu-img" onerror="this.style.opacity='0';">
+                    <div class="menu-details">
+                        <span class="print-qty" id="p-qty-19"></span>
+                        <h3 class="item-name" data-en="Latte" data-zh="拿铁">拿铁</h3>
+                        <p class="item-desc" data-en="Classic latte with your preferred milk and caffeine level" data-zh="可选奶类和咖啡因浓度的拿铁">可选奶类和咖啡因浓度的拿铁</p>
+                        <div class="option-toggle">
+                            <button class="option-btn active" onclick="toggleOptionGroup(this)" data-en="Milk" data-zh="牛奶">牛奶</button>
+                            <button class="option-btn" onclick="toggleOptionGroup(this)" data-en="Oat Milk" data-zh="燕麦奶">燕麦奶</button>
+                        </div>
+                        <div class="option-toggle">
+                            <button class="option-btn active" onclick="toggleOptionGroup(this)" data-en="Regular" data-zh="普通">普通</button>
+                            <button class="option-btn" onclick="toggleOptionGroup(this)" data-en="Decaf" data-zh="去咖啡因">去咖啡因</button>
+                        </div>
+                    </div>
+                    <div class="controls">
+                        <button class="btn-qty" onclick="changeQty(19, -1)">-</button>
+                        <span class="qty-num" id="qty-19">0</span>
+                        <button class="btn-qty" onclick="changeQty(19, 1)">+</button>
+                    </div>
+                </div>
+
+                <div class="menu-item category-dessert unavailable" id="item-20">
+                    <img src="graphics/dish/veggies.jpg" alt="Dessert" class="menu-img" onerror="this.style.opacity='0';">
+                    <div class="soldout-overlay"><img src="graphics/unavailable.png" alt="Unavailable" /></div>
+                    <div class="menu-details">
+                        <span class="print-qty" id="p-qty-20"></span>
+                        <h3 class="item-name" data-en="Tiramisu" data-zh="提拉米苏">提拉米苏</h3>
+                        <p class="item-desc" data-en="Classic tiramisu with rich coffee cream" data-zh="经典咖啡奶酪甜点">经典咖啡奶酪甜点</p>
+                    </div>
+                    <div class="controls">
+                        <button class="btn-qty" onclick="changeQty(20, -1)" disabled>-</button>
+                        <span class="qty-num" id="qty-20">0</span>
+                        <button class="btn-qty" onclick="changeQty(20, 1)" disabled>+</button>
+                    </div>
+                </div>
+
+                <div class="menu-item category-dessert unavailable" id="item-21">
+                    <img src="graphics/dish/tomato_beef.jpg" alt="Dessert" class="menu-img" onerror="this.style.opacity='0';">
+                    <div class="soldout-overlay"><img src="graphics/unavailable.png" alt="Unavailable" /></div>
+                    <div class="menu-details">
+                        <span class="print-qty" id="p-qty-21"></span>
+                        <h3 class="item-name" data-en="Yangzhi Ganlu" data-zh="杨枝甘露">杨枝甘露</h3>
+                        <p class="item-desc" data-en="Sweet mango, pomelo and coconut dessert" data-zh="芒果葡萄柚与椰奶的清爽甜品">芒果葡萄柚与椰奶的清爽甜品</p>
+                    </div>
+                    <div class="controls">
+                        <button class="btn-qty" onclick="changeQty(21, -1)" disabled>-</button>
+                        <span class="qty-num" id="qty-21">0</span>
+                        <button class="btn-qty" onclick="changeQty(21, 1)" disabled>+</button>
+                    </div>
+                </div>
+
+                <div class="menu-item category-alcoholic unavailable" id="item-22">
+                    <img src="graphics/drink/water.jpg" alt="Alcohol" class="menu-img" onerror="this.style.opacity='0';">
+                    <div class="soldout-overlay"><img src="graphics/unavailable.png" alt="Unavailable" /></div>
+                    <div class="menu-details">
+                        <span class="print-qty" id="p-qty-22"></span>
+                        <h3 class="item-name" data-en="Red Wine" data-zh="红酒">红酒</h3>
+                        <p class="item-desc" data-en="Dry red wine with a smooth finish" data-zh="口感醇厚的干红葡萄酒">口感醇厚的干红葡萄酒</p>
+                    </div>
+                    <div class="controls">
+                        <button class="btn-qty" onclick="changeQty(22, -1)" disabled>-</button>
+                        <span class="qty-num" id="qty-22">0</span>
+                        <button class="btn-qty" onclick="changeQty(22, 1)" disabled>+</button>
+                    </div>
+                </div>
+
+                <div class="menu-item category-alcoholic unavailable" id="item-23">
+                    <img src="graphics/drink/water.jpg" alt="Alcohol" class="menu-img" onerror="this.style.opacity='0';">
+                    <div class="soldout-overlay"><img src="graphics/unavailable.png" alt="Unavailable" /></div>
+                    <div class="menu-details">
+                        <span class="print-qty" id="p-qty-23"></span>
+                        <h3 class="item-name" data-en="White Wine" data-zh="白葡萄酒">白葡萄酒</h3>
+                        <p class="item-desc" data-en="Crisp white wine with bright fruit notes" data-zh="清爽明亮的白葡萄酒">清爽明亮的白葡萄酒</p>
+                    </div>
+                    <div class="controls">
+                        <button class="btn-qty" onclick="changeQty(23, -1)" disabled>-</button>
+                        <span class="qty-num" id="qty-23">0</span>
+                        <button class="btn-qty" onclick="changeQty(23, 1)" disabled>+</button>
+                    </div>
+                </div>
+
+                <div class="menu-item category-alcoholic unavailable" id="item-24">
+                    <img src="graphics/drink/water.jpg" alt="Alcohol" class="menu-img" onerror="this.style.opacity='0';">
+                    <div class="soldout-overlay"><img src="graphics/unavailable.png" alt="Unavailable" /></div>
+                    <div class="menu-details">
+                        <span class="print-qty" id="p-qty-24"></span>
+                        <h3 class="item-name" data-en="Soju" data-zh="soju">soju</h3>
+                        <p class="item-desc" data-en="Clean and smooth Korean soju" data-zh="清爽顺口的韩国烧酒">清爽顺口的韩国烧酒</p>
+                    </div>
+                    <div class="controls">
+                        <button class="btn-qty" onclick="changeQty(24, -1)" disabled>-</button>
+                        <span class="qty-num" id="qty-24">0</span>
+                        <button class="btn-qty" onclick="changeQty(24, 1)" disabled>+</button>
+                    </div>
+                </div>
+
+                <div class="menu-item category-alcoholic unavailable" id="item-25">
+                    <img src="graphics/drink/water.jpg" alt="Alcohol" class="menu-img" onerror="this.style.opacity='0';">
+                    <div class="soldout-overlay"><img src="graphics/unavailable.png" alt="Unavailable" /></div>
+                    <div class="menu-details">
+                        <span class="print-qty" id="p-qty-25"></span>
+                        <h3 class="item-name" data-en="Champagne" data-zh="香槟">香槟</h3>
+                        <p class="item-desc" data-en="Bubbly champagne with a crisp finish" data-zh="气泡丰富的香槟">气泡丰富的香槟</p>
+                    </div>
+                    <div class="controls">
+                        <button class="btn-qty" onclick="changeQty(25, -1)" disabled>-</button>
+                        <span class="qty-num" id="qty-25">0</span>
+                        <button class="btn-qty" onclick="changeQty(25, 1)" disabled>+</button>
+                    </div>
+                </div>
+
+                <div class="menu-item category-alcoholic unavailable" id="item-26">
+                    <img src="graphics/drink/water.jpg" alt="Alcohol" class="menu-img" onerror="this.style.opacity='0';">
+                    <div class="soldout-overlay"><img src="graphics/unavailable.png" alt="Unavailable" /></div>
+                    <div class="menu-details">
+                        <span class="print-qty" id="p-qty-26"></span>
+                        <h3 class="item-name" data-en="Mojito" data-zh="莫吉托">莫吉托</h3>
+                        <p class="item-desc" data-en="Minty mojito with lime and rum" data-zh="薄荷青柠朗姆酒鸡尾酒">薄荷青柠朗姆酒鸡尾酒</p>
+                    </div>
+                    <div class="controls">
+                        <button class="btn-qty" onclick="changeQty(26, -1)" disabled>-</button>
+                        <span class="qty-num" id="qty-26">0</span>
+                        <button class="btn-qty" onclick="changeQty(26, 1)" disabled>+</button>
+                    </div>
+                </div>
+
+                <div class="menu-item category-alcoholic unavailable" id="item-27">
+                    <img src="graphics/drink/water.jpg" alt="Alcohol" class="menu-img" onerror="this.style.opacity='0';">
+                    <div class="soldout-overlay"><img src="graphics/unavailable.png" alt="Unavailable" /></div>
+                    <div class="menu-details">
+                        <span class="print-qty" id="p-qty-27"></span>
+                        <h3 class="item-name" data-en="Margarita" data-zh="margarita">margarita</h3>
+                        <p class="item-desc" data-en="Classic margarita with lime and tequila" data-zh="经典青柠龙舌兰鸡尾酒">经典青柠龙舌兰鸡尾酒</p>
+                    </div>
+                    <div class="controls">
+                        <button class="btn-qty" onclick="changeQty(27, -1)" disabled>-</button>
+                        <span class="qty-num" id="qty-27">0</span>
+                        <button class="btn-qty" onclick="changeQty(27, 1)" disabled>+</button>
+                    </div>
+                </div>
+
+                <div class="menu-item category-alcoholic unavailable" id="item-28">
+                    <img src="graphics/drink/water.jpg" alt="Alcohol" class="menu-img" onerror="this.style.opacity='0';">
+                    <div class="soldout-overlay"><img src="graphics/unavailable.png" alt="Unavailable" /></div>
+                    <div class="menu-details">
+                        <span class="print-qty" id="p-qty-28"></span>
+                        <h3 class="item-name" data-en="Pina Colada" data-zh="pina colada">pina colada</h3>
+                        <p class="item-desc" data-en="Creamy tropical cocktail with pineapple and coconut" data-zh="香甜热带风味鸡尾酒">香甜热带风味鸡尾酒</p>
+                    </div>
+                    <div class="controls">
+                        <button class="btn-qty" onclick="changeQty(28, -1)" disabled>-</button>
+                        <span class="qty-num" id="qty-28">0</span>
+                        <button class="btn-qty" onclick="changeQty(28, 1)" disabled>+</button>
+                    </div>
+                </div>
+
+                <div class="menu-item category-alcoholic unavailable" id="item-29">
+                    <img src="graphics/drink/water.jpg" alt="Alcohol" class="menu-img" onerror="this.style.opacity='0';">
+                    <div class="soldout-overlay"><img src="graphics/unavailable.png" alt="Unavailable" /></div>
+                    <div class="menu-details">
+                        <span class="print-qty" id="p-qty-29"></span>
+                        <h3 class="item-name" data-en="Long Island Iced Tea" data-zh="长岛冰茶">长岛冰茶</h3>
+                        <p class="item-desc" data-en="A bold mixed cocktail with multiple spirits" data-zh="酒精浓郁的经典混合鸡尾酒">酒精浓郁的经典混合鸡尾酒</p>
+                    </div>
+                    <div class="controls">
+                        <button class="btn-qty" onclick="changeQty(29, -1)" disabled>-</button>
+                        <span class="qty-num" id="qty-29">0</span>
+                        <button class="btn-qty" onclick="changeQty(29, 1)" disabled>+</button>
+                    </div>
+                </div>
+
             </div>
 
-            <button class="btn-order" onclick="printReceipt()" id="order-btn">Hit Order & Print Menu</button>
+            <button class="btn-order" onclick="submitOrder()" id="order-btn">Submit Order</button>
         </div>
     </div>
 
+    <div id="item-detail-overlay" class="item-detail-overlay hidden-element" onclick="closeItemDetail()">
+        <div class="item-detail-panel" onclick="event.stopPropagation()">
+            <button type="button" class="item-detail-close" onclick="closeItemDetail()" aria-label="Close">×</button>
+            <div id="item-detail-content" class="item-detail-content"></div>
+        </div>
+    </div>
+
+    <div id="cart-overlay" class="cart-overlay hidden-element">
+        <div class="cart-panel-overlay" onclick="event.stopPropagation()">
+            <button type="button" class="cart-close-btn" onclick="toggleCart()">×</button>
+            <div class="cart-panel-header" id="cart-panel-header">我的购物车</div>
+            <div class="cart-summary" id="cart-summary">购物车中尚无商品。</div>
+            <div class="cart-items" id="cart-items"></div>
+            <div class="cart-actions">
+                <button type="button" class="btn-clear" onclick="clearCart()">清空购物车</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js/dist/umd/supabase.js"></script>
     <script>
         function enterSite() {
             document.getElementById('welcome-screen').classList.add('hidden-screen');
+            const cartToggle = document.getElementById('cart-toggle-btn');
+            if (cartToggle) {
+                cartToggle.style.display = 'inline-flex';
+            }
         }
+
+        const SUPABASE_URL = 'https://vmongicasctytfmnorui.supabase.co';
+        const SUPABASE_ANON_KEY = 'sb_publishable_wfE5iimxJBnDZ91JCwLJVQ_NvOUYqTk';
+        const ORDER_TABLE = 'orders';
+        let supabaseClient = null;
 
         let currentLang = 'zh';
         let currentCategory = 'dishes';
-        const itemQuantities = { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0, 7: 0, 8: 0, 9: 0, 10: 0, 11: 0, 12: 0, 13: 0, 14: 0, 15: 0 };
+        const itemQuantities = { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0, 7: 0, 8: 0, 9: 0, 10: 0, 11: 0, 12: 0, 13: 0, 14: 0, 15: 0, 16: 0, 17: 0, 18: 0, 19: 0, 20: 0, 21: 0, 22: 0, 23: 0, 24: 0, 25: 0, 26: 0, 27: 0, 28: 0, 29: 0 };
+        let cartItems = [];
+
+        function getItemOption(itemElement) {
+            const optionGroups = itemElement.querySelectorAll('.option-toggle');
+            const selectedOptions = [];
+            optionGroups.forEach(group => {
+                const activeOption = group.querySelector('.option-btn.active');
+                if (activeOption) {
+                    selectedOptions.push(activeOption.textContent.trim());
+                }
+            });
+            return selectedOptions.length ? selectedOptions.join(' / ') : '';
+        }
+
+        function closeItemDetail() {
+            const overlay = document.getElementById('item-detail-overlay');
+            if (overlay) {
+                overlay.classList.add('hidden-element');
+                document.getElementById('item-detail-content').innerHTML = '';
+            }
+        }
+
+        function attachOptionButtonBehavior(button) {
+            button.onclick = null;
+            button.addEventListener('click', (event) => {
+                event.stopPropagation();
+                const modalPanel = document.querySelector('.item-detail-panel');
+                const sourceItem = modalPanel && modalPanel.dataset.itemId
+                    ? document.getElementById(`item-${modalPanel.dataset.itemId}`)
+                    : button.closest('.menu-item');
+                const group = button.parentElement;
+                const allBtns = group.querySelectorAll('.option-btn');
+                allBtns.forEach(btn => btn.classList.remove('active'));
+                button.classList.add('active');
+
+                if (sourceItem) {
+                    const sourceGroups = sourceItem.querySelectorAll('.option-toggle');
+                    const groupIndex = Array.from(group.parentElement.querySelectorAll('.option-toggle')).indexOf(group);
+                    const sourceGroup = sourceGroups[groupIndex];
+                    if (sourceGroup) {
+                        const sourceButtons = sourceGroup.querySelectorAll('.option-btn');
+                        sourceButtons.forEach(btn => btn.classList.remove('active'));
+                        const matchingSourceButton = Array.from(sourceButtons).find(btn => btn.textContent.trim() === button.textContent.trim());
+                        if (matchingSourceButton) {
+                            matchingSourceButton.classList.add('active');
+                        }
+                    }
+                }
+
+                const onclickText = button.getAttribute('onclick') || '';
+                const waterMatch = onclickText.match(/toggleWaterOption\(this, '([^']+)'\)/);
+                if (waterMatch) {
+                    const nextSrc = waterMatch[1] === 'ice'
+                        ? 'graphics/drink/water_iced.jpg'
+                        : waterMatch[1] === 'hot'
+                            ? 'graphics/drink/hot_water.jpg'
+                            : 'graphics/drink/water.jpg';
+                    const modalImage = document.querySelector('.item-detail-image');
+                    const cardImage = sourceItem?.querySelector('.menu-img');
+                    [modalImage, cardImage].filter(Boolean).forEach(img => { img.src = nextSrc; });
+                }
+            });
+        }
+
+        function openItemDetail(itemElement) {
+            const overlay = document.getElementById('item-detail-overlay');
+            const content = document.getElementById('item-detail-content');
+            if (!overlay || !content) return;
+
+            const itemId = Number(itemElement.id.replace('item-', ''));
+            const titleNode = itemElement.querySelector('.item-name');
+            const descNode = itemElement.querySelector('.item-desc');
+            const sourceImg = itemElement.querySelector('.menu-img');
+            const sourceDetails = itemElement.querySelector('.menu-details');
+            const sourceControls = itemElement.querySelector('.controls');
+
+            content.innerHTML = '';
+
+            const imageEl = document.createElement('img');
+            imageEl.className = 'item-detail-image';
+            imageEl.src = sourceImg ? sourceImg.src : '';
+            imageEl.alt = titleNode ? titleNode.textContent : 'Item';
+            content.appendChild(imageEl);
+
+            const infoCol = document.createElement('div');
+            infoCol.className = 'item-detail-info';
+
+            const titleEl = document.createElement('h3');
+            titleEl.textContent = titleNode ? titleNode.textContent : '';
+            infoCol.appendChild(titleEl);
+
+            const descEl = document.createElement('p');
+            descEl.textContent = descNode ? descNode.textContent : '';
+            infoCol.appendChild(descEl);
+
+            if (itemElement.classList.contains('unavailable')) {
+                const unavailableLabel = document.createElement('p');
+                unavailableLabel.textContent = currentLang === 'en' ? 'This item is currently unavailable.' : '此商品当前已售罄。';
+                unavailableLabel.style.color = '#d32f2f';
+                unavailableLabel.style.fontWeight = '700';
+                infoCol.appendChild(unavailableLabel);
+            } else {
+                const detailsClone = document.createElement('div');
+                detailsClone.className = 'item-detail-info';
+                detailsClone.innerHTML = sourceDetails ? sourceDetails.innerHTML : '';
+                const printQty = detailsClone.querySelector('.print-qty');
+                if (printQty) printQty.remove();
+                const detailTitle = detailsClone.querySelector('h3');
+                const detailDesc = detailsClone.querySelector('p');
+                if (detailTitle) detailTitle.remove();
+                if (detailDesc) detailDesc.remove();
+                detailsClone.querySelectorAll('.option-btn').forEach(btn => attachOptionButtonBehavior(btn));
+                infoCol.appendChild(detailsClone);
+
+                const controlsClone = document.createElement('div');
+                controlsClone.className = 'item-detail-controls controls';
+                controlsClone.innerHTML = sourceControls ? sourceControls.innerHTML : '';
+                const qtyButtons = controlsClone.querySelectorAll('.btn-qty');
+                qtyButtons.forEach(btn => {
+                    btn.onclick = () => changeQty(itemId, Number(btn.textContent === '+' ? 1 : -1));
+                });
+                const addButton = controlsClone.querySelector('.btn-add-cart');
+                if (addButton) {
+                    addButton.addEventListener('click', (event) => {
+                        event.stopPropagation();
+                        addToCart(itemId, itemElement);
+                    });
+                }
+                infoCol.appendChild(controlsClone);
+            }
+
+            content.appendChild(infoCol);
+            overlay.classList.remove('hidden-element');
+            overlay.dataset.itemId = itemId;
+            const panel = overlay.querySelector('.item-detail-panel');
+            if (panel) {
+                panel.dataset.itemId = itemId;
+            }
+        }
+
+        function getCartLabel(entry) {
+            return entry.option ? `${entry.name} (${entry.option})` : entry.name;
+        }
+
+        function findCartEntry(itemId, option) {
+            return cartItems.find(cartEntry => cartEntry.itemId === itemId && cartEntry.option === option);
+        }
+
+        function updateCartDisplay() {
+            const cartItemsContainer = document.getElementById('cart-items');
+            const cartSummary = document.getElementById('cart-summary');
+            cartItemsContainer.innerHTML = '';
+
+            if (!cartItems.length) {
+                cartSummary.textContent = currentLang === 'en' ? 'No items in cart yet.' : '购物车中尚无商品。';
+                return;
+            }
+
+            let totalQuantity = 0;
+            cartItems.forEach((entry, index) => {
+                totalQuantity += entry.quantity;
+                const itemEl = document.createElement('div');
+                itemEl.className = 'cart-item';
+                itemEl.innerHTML = `
+                    <div class="cart-item-label">
+                        <strong>${getCartLabel(entry)}</strong>
+                        <span class="cart-item-meta">${currentLang === 'en' ? `Qty: ${entry.quantity}` : `数量: ${entry.quantity}`}</span>
+                    </div>
+                    <div class="cart-item-actions">
+                        <button type="button" class="btn-remove" onclick="removeCartItem(${index})">${currentLang === 'en' ? 'Remove' : '删除'}</button>
+                    </div>
+                `;
+                cartItemsContainer.appendChild(itemEl);
+            });
+
+            const countLabel = document.getElementById('cart-count');
+            if (countLabel) {
+                countLabel.textContent = totalQuantity;
+            }
+            cartSummary.textContent = currentLang === 'en'
+                ? `Cart contains ${totalQuantity} item${totalQuantity === 1 ? '' : 's'}.` 
+                : `购物车共有 ${totalQuantity} 件商品。`;
+        }
+
+        function removeCartItem(index) {
+            cartItems.splice(index, 1);
+            updateCartDisplay();
+        }
+
+        function clearCart() {
+            cartItems = [];
+            updateCartDisplay();
+        }
+
+        function addToCart(itemId, itemElement) {
+            const quantity = itemQuantities[itemId] || 0;
+            const statusNode = document.getElementById('order-status');
+
+            if (itemElement.classList.contains('unavailable')) {
+                statusNode.textContent = currentLang === 'en' ? 'This item is currently unavailable.' : '此商品当前已售罄。';
+                statusNode.style.color = '#d32f2f';
+                return;
+            }
+
+            if (!quantity) {
+                statusNode.textContent = currentLang === 'en' ? 'Please choose a quantity before adding to cart.' : '请先选择数量，然后再添加到购物车。';
+                statusNode.style.color = '#d32f2f';
+                return;
+            }
+
+            const name = itemElement.querySelector('.item-name')?.textContent || '';
+            const option = getItemOption(itemElement);
+            const existingEntry = findCartEntry(itemId, option);
+
+            if (existingEntry) {
+                existingEntry.quantity += quantity;
+            } else {
+                cartItems.push({ itemId, name, option, quantity });
+            }
+
+            itemQuantities[itemId] = 0;
+            document.getElementById(`qty-${itemId}`).innerText = '0';
+            document.getElementById(`p-qty-${itemId}`).innerText = '';
+            itemElement.classList.remove('has-qty');
+
+            statusNode.textContent = currentLang === 'en' ? 'Added to cart.' : '已添加到购物车。';
+            statusNode.style.color = '#2e7d32';
+            updateCartDisplay();
+        }
+
+        function toggleCart() {
+            const welcomeScreen = document.getElementById('welcome-screen');
+            if (welcomeScreen && !welcomeScreen.classList.contains('hidden-screen')) {
+                return;
+            }
+            const overlay = document.getElementById('cart-overlay');
+            if (!overlay) return;
+            overlay.classList.toggle('hidden-element');
+            if (!overlay.classList.contains('hidden-element')) {
+                updateCartDisplay();
+            }
+        }
+
+        function collectOrderData() {
+            return cartItems.map(entry => ({
+                id: entry.itemId,
+                name: entry.name,
+                quantity: entry.quantity,
+                option: entry.option
+            }));
+        }
 
         // SWITCH CATEGORY TAB FILTER FUNCTION
         function switchCategory(categoryName, tabElement) {
@@ -577,7 +1731,7 @@
             // Dynamically show items matching category
             document.querySelectorAll('.menu-item').forEach(item => {
                 if (item.classList.contains(`category-${categoryName}`)) {
-                    item.style.display = 'flex';
+                    item.style.display = 'grid';
                 } else {
                     item.style.display = 'none';
                 }
@@ -619,80 +1773,167 @@
                     btn.innerText = btn.getAttribute(`data-${currentLang}`);
                 });
             });
+
+            document.querySelectorAll('.btn-add-cart').forEach(btn => {
+                btn.innerText = currentLang === 'en' ? 'Add to Cart' : '加入购物车';
+            });
         }
 
         function toggleMilkOption(button, option) {
-            // Remove active class from all option buttons in this item
             const allOptionBtns = button.parentElement.querySelectorAll('.option-btn');
             allOptionBtns.forEach(btn => btn.classList.remove('active'));
-            
-            // Add active class to clicked button
             button.classList.add('active');
         }
 
         function toggleColaOption(button, option) {
-            // Remove active class from all option buttons in this item
             const allOptionBtns = button.parentElement.querySelectorAll('.option-btn');
             allOptionBtns.forEach(btn => btn.classList.remove('active'));
-            
-            // Add active class to clicked button
             button.classList.add('active');
         }
 
         function toggleWaterOption(button, option) {
-            // Remove active class from all option buttons in this item
             const allOptionBtns = button.parentElement.querySelectorAll('.option-btn');
             allOptionBtns.forEach(btn => btn.classList.remove('active'));
-            
-            // Add active class to clicked button
             button.classList.add('active');
-            
-            // Change image based on selected option
+
+            const overlay = document.getElementById('item-detail-overlay');
+            const overlayImage = overlay?.querySelector('.item-detail-image');
             const menuItem = button.closest('.menu-item');
-            const imgElement = menuItem.querySelector('.menu-img');
-            
-            if (option === 'ice') {
-                imgElement.src = 'graphics/drink/water_iced.jpg';
-            } else if (option === 'hot') {
-                imgElement.src = 'graphics/drink/hot_water.jpg';
-            } else {
-                imgElement.src = 'graphics/drink/water.jpg';
-            }
+            const cardImage = menuItem?.querySelector('.menu-img');
+            const imageSet = [overlayImage, cardImage].filter(Boolean);
+
+            const nextSrc = option === 'ice' ? 'graphics/drink/water_iced.jpg' : option === 'hot' ? 'graphics/drink/hot_water.jpg' : 'graphics/drink/water.jpg';
+            imageSet.forEach(img => { if (img) img.src = nextSrc; });
+        }
+
+        function toggleOptionGroup(button) {
+            const allOptionBtns = button.parentElement.querySelectorAll('.option-btn');
+            allOptionBtns.forEach(btn => btn.classList.remove('active'));
+            button.classList.add('active');
         }
 
         function changeQty(itemId, amount) {
+            const targetRow = document.getElementById(`item-${itemId}`);
+            if (targetRow.classList.contains('unavailable')) {
+                return;
+            }
+
             let revisedQty = itemQuantities[itemId] + amount;
             if (revisedQty < 0) revisedQty = 0;
             
             itemQuantities[itemId] = revisedQty;
-            document.getElementById(`qty-${itemId}`).innerText = revisedQty;
+            const cardQty = document.getElementById(`qty-${itemId}`);
+            if (cardQty) {
+                cardQty.innerText = revisedQty;
+            }
             
-            const targetRow = document.getElementById(`item-${itemId}`);
             const printCounter = document.getElementById(`p-qty-${itemId}`);
-            
-            if (revisedQty > 0) {
-                targetRow.classList.add('has-qty');
-                printCounter.innerText = `[x${revisedQty}]`;
-            } else {
-                targetRow.classList.remove('has-qty');
-                printCounter.innerText = '';
+            if (printCounter) {
+                if (revisedQty > 0) {
+                    targetRow.classList.add('has-qty');
+                    printCounter.innerText = `[x${revisedQty}]`;
+                } else {
+                    targetRow.classList.remove('has-qty');
+                    printCounter.innerText = '';
+                }
+            }
+
+            const modalQty = document.getElementById('item-detail-overlay')?.querySelector(`.item-detail-controls #qty-${itemId}`);
+            if (modalQty) {
+                modalQty.innerText = revisedQty;
             }
         }
 
-        function printReceipt() {
-            const grandTotal = Object.values(itemQuantities).reduce((acc, qty) => acc + qty, 0);
-            if (grandTotal === 0) {
-                alert(currentLang === 'en' ? "Your selection layout is empty!" : "您尚未勾选任何菜单选项！");
+        async function submitOrder() {
+            const nameRow = document.getElementById('order-name-row');
+            const nameInput = document.getElementById('orderer-name');
+            const statusNode = document.getElementById('order-status');
+            const orderItems = collectOrderData();
+
+            if (!orderItems.length) {
+                statusNode.textContent = currentLang === 'en' ? 'Select at least one item before submitting.' : '请先选择至少一件商品。';
+                statusNode.style.color = '#d32f2f';
                 return;
             }
 
-            alert(currentLang === 'en' ? "Order submitted successfully!" : "订单已成功提交！");
+            if (nameRow.classList.contains('hidden-element')) {
+                nameRow.classList.remove('hidden-element');
+                statusNode.textContent = currentLang === 'en' ? 'Enter your name and press Submit Order again.' : '请输入您的姓名，然后再次按提交订单。';
+                statusNode.style.color = '#5c4033';
+                nameInput.focus();
+                return;
+            }
+
+            if (!nameInput.value.trim()) {
+                statusNode.textContent = currentLang === 'en' ? 'Please enter your name before submitting.' : '请在提交前输入您的姓名。';
+                statusNode.style.color = '#d32f2f';
+                nameInput.focus();
+                return;
+            }
+
+            if (SUPABASE_URL.includes('your-project') || SUPABASE_ANON_KEY.includes('your-anon-key')) {
+                statusNode.textContent = currentLang === 'en' ? 'Replace Supabase config with your project values.' : '请将 Supabase 配置替换为您的项目值。';
+                statusNode.style.color = '#d32f2f';
+                return;
+            }
+
+            statusNode.textContent = currentLang === 'en' ? 'Submitting order...' : '正在提交订单...';
+            statusNode.style.color = '#5c4033';
+
+            if (!supabaseClient) {
+                if (typeof supabase === 'undefined' || !supabase.createClient) {
+                    statusNode.textContent = currentLang === 'en' ? 'Unable to load Supabase client.' : '无法加载 Supabase 客户端。';
+                    statusNode.style.color = '#d32f2f';
+                    return;
+                }
+                supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+            }
+
+            const orderPayload = {
+                name: nameInput.value.trim(),
+                order_data: orderItems,
+                created_at: new Date().toISOString()
+            };
+
+            const { error } = await supabaseClient
+                .from(ORDER_TABLE)
+                .insert([orderPayload]);
+
+            if (error) {
+                if (error.message?.includes("Could not find the table 'public.orders'")) {
+                    saveOrderLocally(orderPayload);
+                    statusNode.textContent = currentLang === 'en'
+                        ? "Supabase error: table 'orders' is missing. Order saved locally in browser storage. Create a public table named orders with columns name, order_data, created_at."
+                        : "Supabase 错误：缺少名为 orders 的表。订单已保存在本地浏览器存储中。请创建一个名为 orders 的公开表，包含 name、order_data、created_at 列。";
+                } else if (error.message?.includes('violates row-level security policy')) {
+                    saveOrderLocally(orderPayload);
+                    statusNode.textContent = currentLang === 'en'
+                        ? "Supabase error: row-level security blocked the insert. Create a table policy allowing anonymous inserts into orders, or use a server-side service role key. Order saved locally."
+                        : "Supabase 错误：行级安全策略阻止了插入。请为 orders 表创建允许匿名插入的策略，或使用服务器端 service role 密钥。订单已保存在本地。";
+                } else {
+                    statusNode.textContent = currentLang === 'en' ? `Order failed: ${error.message}` : `订单失败: ${error.message}`;
+                }
+                statusNode.style.color = '#d32f2f';
+                return;
+            }
+
+            statusNode.textContent = currentLang === 'en' ? 'Order submitted successfully!' : '订单提交成功！';
+            statusNode.style.color = '#2e7d32';
+            nameInput.value = '';
+            cartItems = [];
+            updateCartDisplay();
+            document.getElementById('order-btn').blur();
         }
 
         function initializeLanguage() {
-            document.getElementById('lang-toggle').innerText = 'English';
-            document.getElementById('order-btn').innerText = '确认订单并打印菜单';
-            document.getElementById('sidebar-title').innerText = '菜单分类';
+            const langToggle = document.getElementById('lang-toggle');
+            if (langToggle) langToggle.innerText = 'English';
+            const orderBtn = document.getElementById('order-btn');
+            if (orderBtn) orderBtn.innerText = '确认订单并打印菜单';
+            const sidebarTitle = document.getElementById('sidebar-title');
+            if (sidebarTitle) sidebarTitle.innerText = '菜单分类';
+            const cartHeader = document.getElementById('cart-panel-header');
+            if (cartHeader) cartHeader.innerText = '我的购物车';
             updateHeaderTitle();
             
             document.querySelectorAll('.menu-item').forEach(item => {
@@ -709,9 +1950,77 @@
                     btn.innerText = btn.getAttribute('data-zh');
                 });
             });
+
+            const cartSummary = document.getElementById('cart-summary');
+            if (cartSummary && !cartItems.length) {
+                cartSummary.textContent = '购物车中尚无商品。';
+            }
         }
 
-        document.addEventListener('DOMContentLoaded', initializeLanguage);
+        function initializeMenuCards() {
+            if (document.body.dataset.menuCardsInitialized === 'true') {
+                return;
+            }
+            document.body.dataset.menuCardsInitialized = 'true';
+
+            initializeLanguage();
+            const activeTab = document.querySelector('.tab-btn.active-tab');
+            if (activeTab) {
+                switchCategory(currentCategory, activeTab);
+            }
+
+            document.querySelectorAll('.menu-item').forEach(item => {
+                const itemId = Number(item.id.replace('item-', ''));
+                const controls = item.querySelector('.controls');
+                item.querySelectorAll('.option-btn').forEach(btn => attachOptionButtonBehavior(btn));
+                if (controls && !controls.querySelector('.btn-add-cart')) {
+                    const addButton = document.createElement('button');
+                    addButton.type = 'button';
+                    addButton.className = 'btn-add-cart';
+                    addButton.textContent = currentLang === 'en' ? 'Add to Cart' : '加入购物车';
+                    addButton.addEventListener('click', (event) => {
+                        event.stopPropagation();
+                        addToCart(itemId, item);
+                    });
+                    if (item.classList.contains('unavailable')) {
+                        addButton.disabled = true;
+                    }
+                    controls.appendChild(addButton);
+                }
+
+                if (item.classList.contains('unavailable')) {
+                    item.querySelectorAll('.btn-qty').forEach(btn => btn.remove());
+                    item.querySelectorAll('.btn-add-cart').forEach(btn => btn.remove());
+                }
+
+                item.setAttribute('tabindex', '0');
+                item.addEventListener('click', (event) => {
+                    if (event.target.closest('.btn-qty, .btn-add-cart, .option-btn')) {
+                        return;
+                    }
+                    openItemDetail(item);
+                });
+                item.addEventListener('keydown', (event) => {
+                    if (event.key === 'Enter' || event.key === ' ') {
+                        event.preventDefault();
+                        openItemDetail(item);
+                    }
+                });
+            });
+
+            const cartToggle = document.getElementById('cart-toggle-btn');
+            if (cartToggle) {
+                cartToggle.style.display = 'none';
+            }
+
+            updateCartDisplay();
+        }
+
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', initializeMenuCards);
+        } else {
+            initializeMenuCards();
+        }
     </script>
 </body>
 </html>
